@@ -1,5 +1,6 @@
 package com.softgen.gate.activities;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
@@ -12,12 +13,14 @@ import android.text.TextWatcher;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.softgen.gate.database.DBHelper;
 import com.softgen.gate.gatedb.R;
+import com.softgen.gate.provider.SharedUtils;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -26,6 +29,8 @@ public class MainActivity extends AppCompatActivity {
     public TextInputLayout inputLayoutName, inputLayoutEmail, inputLayoutPassword;
     public EditText inputName, inputEmail, inputPassword;
     DBHelper db;
+    private CheckBox rememberMe;
+    private Context mActivity;
 
     private static boolean isValidEmail(String email) {
         return !TextUtils.isEmpty(email) && android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches();
@@ -40,22 +45,28 @@ public class MainActivity extends AppCompatActivity {
         toolbar.setTitle("Login");
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(false);
-        db = new DBHelper(MainActivity.this);
+        mActivity = MainActivity.this;
+        db = new DBHelper(mActivity);
         inputLayoutName = (TextInputLayout) findViewById(R.id.input_layout_name1);
         inputLayoutPassword = (TextInputLayout) findViewById(R.id.input_layout_password);
-
+        rememberMe = (CheckBox) findViewById(R.id.checkBox);
         inputName = (EditText) findViewById(R.id.input_name);
         inputPassword = (EditText) findViewById(R.id.input_password);
-
         inputName.addTextChangedListener(new MyTextWatcher(inputName));
         inputPassword.addTextChangedListener(new MyTextWatcher(inputPassword));
-
+        String username = SharedUtils.getUserName(mActivity);
+        String password = SharedUtils.getPassword(mActivity);
+        if (username != null && password != null) {
+            inputName.setText(username);
+            inputPassword.setText(password);
+            rememberMe.setChecked(true);
+        }
         tv = (TextView) findViewById(R.id.tv1);
         tv.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View view) {
-                Intent i = new Intent(MainActivity.this, RegisterActivity.class);
+                Intent i = new Intent(mActivity, RegisterActivity.class);
                 startActivity(i);
             }
         });
@@ -65,7 +76,7 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onClick(View view) {
-                Intent in = new Intent(MainActivity.this, ForgotActivity.class);
+                Intent in = new Intent(mActivity, ForgotActivity.class);
                 startActivity(in);
             }
         });
@@ -82,7 +93,11 @@ public class MainActivity extends AppCompatActivity {
                 } else {
                     boolean flags = db.getUserData(inputName.getText().toString(), inputPassword.getText().toString());
                     if (flags) {
-                        Intent i1 = new Intent(MainActivity.this, HomeActivity.class);
+                        if (rememberMe.isChecked()) {
+                            SharedUtils.storeUserName(mActivity, inputName.getText().toString());
+                            SharedUtils.storePasword(mActivity, inputPassword.getText().toString());
+                        }
+                        Intent i1 = new Intent(mActivity, HomeActivity.class);
                         startActivity(i1);
                     } else {
                         Snackbar.make(view, "Username or Password doesn't exist", Snackbar.LENGTH_LONG).setAction("Action", null).show();

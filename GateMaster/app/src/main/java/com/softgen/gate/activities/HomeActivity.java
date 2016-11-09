@@ -145,7 +145,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
                 startActivity(i4);
                 break;
             default:
-                Intent i5 = new Intent(this, OfferedActivity.class);
+                Intent i5 = new Intent(this, HelpActivity.class);
                 startActivity(i5);
                 break;
 

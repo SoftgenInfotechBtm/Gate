@@ -8,6 +8,8 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -18,27 +20,34 @@ import com.softgen.gate.gatedb.R;
 
 
 public class PersonelActivity extends AppCompatActivity {
+    public Context mcon;
     ImageView imageView;
     TextView name, email, mobile, about;
     ImageButton call, msg;
-    public Context mcon;
-//    public Integer b2;
+    //    public Integer b2;
     private int position;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_persondetails);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        mcon = PersonelActivity.this;
         imageView = (ImageView) findViewById(R.id.prfl);
         name = (TextView) findViewById(R.id.name);
         email = (TextView) findViewById(R.id.email);
         mobile = (TextView) findViewById(R.id.mobile);
         about = (TextView) findViewById(R.id.description);
+        call = (ImageButton) findViewById(R.id.call_service);
+        msg = (ImageButton) findViewById(R.id.message_service);
         imageView.setImageResource(getIntent().getIntExtra("img_id", 00));
         name.setText("Name:" + getIntent().getStringExtra("Name"));
         email.setText("Email:" + getIntent().getStringExtra("Email"));
         mobile.setText("Mobile:" + getIntent().getStringExtra("Mobile"));
         about.setText("About:" + getIntent().getStringExtra("About"));
+        position = getIntent().getIntExtra("click_position",0);
         call.setOnClickListener(new View.OnClickListener() {
 
             @Override
@@ -75,6 +84,18 @@ public class PersonelActivity extends AppCompatActivity {
         Details(position);
     }
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                finish();
+                return false;
+            default:
+                break;
+
+        }
+        return super.onOptionsItemSelected(item);
+    }
 
     public void Details(int position) {
 

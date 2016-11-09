@@ -47,8 +47,7 @@ public class OfferedActivity extends AppCompatActivity {
             public void onClick(View view, int position) {
                 Offered offered = offeredList.get(position);
                 Intent i = new Intent(OfferedActivity.this, PersonelActivity.class);
-                //for(position = 0; position <= offeredList.size(); position++)
-                i.putExtra("position", position);
+                i.putExtra("click_position", position);
                 startActivity(i);
                 Toast.makeText(getApplicationContext(), offered.getName() + " is selected!", Toast.LENGTH_SHORT).show();
             }
