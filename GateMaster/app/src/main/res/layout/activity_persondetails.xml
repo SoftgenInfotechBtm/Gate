@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    tools:context="com.softgen.gate.activities.PersonelActivity">
+
+    <!--<ScrollView-->
+        <!--android:id="@+id/login_form"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="match_parent">-->
+
+        <ImageView
+            android:id="@+id/prfl"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/carpenter1" />
+
+        <TextView
+            android:id="@+id/name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/prfl"
+            android:text="Name:Mahesh"
+            android:textSize="30dp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/email"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/name"
+            android:text="Email:mahesh123@gmail.com"
+            android:textSize="20dp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/mobile"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/email"
+            android:text="Mobile:9738514840"
+            android:textSize="20dp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/description"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/mobile"
+            android:text="@string/description"
+            android:textSize="20dp"
+            android:textStyle="bold" />
+
+        <ImageButton
+            android:id="@+id/img1"
+            android:layout_width="34dp"
+            android:layout_height="34dp"
+            android:layout_alignTop="@+id/prfl"
+            android:layout_marginTop="44dp"
+            android:layout_toEndOf="@+id/name"
+            android:layout_toRightOf="@+id/name"
+            android:layout_weight="1"
+            android:src="@drawable/phone1" />
+
+        <ImageButton
+            android:id="@+id/img2"
+            android:layout_width="34dp"
+            android:layout_height="34dp"
+            android:layout_alignTop="@+id/img1"
+            android:layout_marginLeft="34dp"
+            android:layout_marginStart="34dp"
+            android:layout_toEndOf="@+id/img1"
+            android:layout_toRightOf="@+id/img1"
+            android:layout_weight="1"
+            android:paddingRight="10dp"
+            android:src="@drawable/messg1" />
+
+    <!--</ScrollView>-->
+
+</RelativeLayout>

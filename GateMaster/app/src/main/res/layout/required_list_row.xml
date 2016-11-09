@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="?android:attr/selectableItemBackground"
+    android:clickable="true"
+    android:focusable="true"
+    android:orientation="vertical">
+
+    <android.support.v7.widget.CardView xmlns:card_view="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/card_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        card_view:cardBackgroundColor="@color/back"
+        card_view:cardCornerRadius="5dp"
+        card_view:cardElevation="5dp"
+        card_view:cardUseCompatPadding="true">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <ImageView
+                android:id="@+id/img"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="left"
+                android:src="@drawable/profile" />
+
+            <TextView
+                android:id="@+id/nm"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toRightOf="@+id/img"
+                android:text="Name"
+                android:textColor="@color/name"
+                android:textSize="20sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/am"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/nm"
+                android:layout_toRightOf="@+id/img"
+                android:text="amount"
+                android:textColor="@color/rating" />
+
+
+            <TextView
+                android:id="@+id/rt"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/am"
+                android:layout_toRightOf="@+id/img"
+                android:text="rating"
+                android:textColor="@color/rating" />
+
+            <RatingBar
+                android:id="@+id/star"
+                style="?android:attr/ratingBarStyleSmall"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/rt"
+                android:layout_toRightOf="@+id/img" />
+
+            <ImageButton
+                android:id="@+id/img1"
+                android:layout_width="34dp"
+                android:layout_height="32dp"
+                android:layout_above="@+id/rt"
+                android:layout_toEndOf="@+id/star"
+                android:layout_toRightOf="@+id/star"
+                android:layout_weight="1"
+                android:src="@drawable/face" />
+
+            <ImageButton
+                android:layout_width="34dp"
+                android:layout_height="32dp"
+                android:layout_alignTop="@+id/img1"
+                android:layout_marginLeft="10dp"
+                android:layout_marginStart="10dp"
+                android:layout_toEndOf="@+id/img1"
+                android:layout_toRightOf="@+id/img1"
+                android:layout_weight="1"
+                android:paddingRight="10dp"
+                android:src="@drawable/face" />
+        </RelativeLayout>
+    </android.support.v7.widget.CardView>
+</LinearLayout>

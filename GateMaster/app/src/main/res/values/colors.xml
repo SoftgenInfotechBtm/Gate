@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#51b53f</color>
+    <color name="colorPrimaryDark">#439f30</color>
+    <color name="colorAccent">#379923</color>
+    <color name="light_black">#504f4f</color>
+    <color name="back">#f1f2f7</color>
+    <color name="black">#000000</color>
+    <color name="blue">#0737d4</color>
+    <color name="ble">#606c7f</color>
+    <color name="red">#FF0000</color>
+    <color name="rednew">#ecbfc5</color>
+    <color name="gra">#999999</color>
+    <color name="white">#ffffff</color>
+    <color name="buttongr">#54C571</color>
+    <color name="button_pressed">#000000</color>
+    <color name="button_focused">#000000</color>
+    <color name="button_default">#999999</color>
+    <color name="grey_txt">#999999</color>
+    <color name="transparent">#00000000</color>
+    <color name="light_grey">#DCDCDC</color>
+
+    <color name="red_for_clendar_day">#EC664B</color>
+    <color name="grey_for_clendar_day">#F4F4F4</color>
+    <color name="light_red_for_clendar_day">#FEF3E1</color>
+
+    <color name="bg">#F0F0F0</color>
+    <color name="grey_thick">#696969</color>
+
+    <color name="rating">#999999</color>
+    <color name="name">#222222</color>
+</resources>

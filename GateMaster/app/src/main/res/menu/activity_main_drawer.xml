@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/nav_servicesOffered"
+            android:icon="@drawable/service3"
+            android:title="Services Offered" />
+        <item
+            android:id="@+id/nav_servicesRequired"
+            android:icon="@drawable/service2"
+            android:title="Services Required" />
+        <item
+            android:id="@+id/nav_placesVisited"
+            android:icon="@drawable/ic_nav"
+            android:title="Places Visited" />
+        <item
+            android:id="@+id/nav_tools"
+            android:icon="@drawable/ic_menu_manage"
+            android:title="Tools" />
+    </group>
+
+    <item android:title="Communicate">
+        <menu>
+            <item
+                android:id="@+id/nav_profile"
+                android:icon="@drawable/prof"
+                android:title="Profile" />
+            <item
+                android:id="@+id/nav_share"
+                android:icon="@drawable/ic_menu_share"
+                android:title="Share" />
+            <item
+                android:id="@+id/nav_rateUs"
+                android:icon="@drawable/rate_us"
+                android:title="Rate Us" />
+            <item
+                android:id="@+id/nav_help"
+                android:icon="@drawable/help"
+                android:title="Help" />
+            <item
+                android:id="@+id/nav_signOut"
+                android:icon="@drawable/signout"
+                android:title="Sign Out" />
+        </menu>
+    </item>
+
+</menu>
