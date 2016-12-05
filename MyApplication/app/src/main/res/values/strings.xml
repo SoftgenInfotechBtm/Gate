@@ -1,0 +1,15 @@
+<resources>
+    <string name="app_name">Flames</string>
+    <string name="action_ramadu">Ramudu</string>
+    <string name="boys_name">Boy\'s Name</string>
+    <string name="girls_name">Girl\'s Name</string>
+    <string name="calculate">Calculate</string>
+    <string name="result">Result\'s Are : <u>%1$s</u></string>
+    <string name="result_label">Result\'s Are</string>
+    <string name="friend">FRIEND</string>
+    <string name="love">LOVE</string>
+    <string name="attraction">ACQUAINTANCE</string>
+    <string name="marriage">MARRIAGE</string>
+    <string name="enemy">ENEMY</string>
+    <string name="sister">SWEETHEART</string>
+</resources>
