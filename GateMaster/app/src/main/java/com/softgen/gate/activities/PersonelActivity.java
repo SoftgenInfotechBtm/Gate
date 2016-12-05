@@ -47,7 +47,7 @@ public class PersonelActivity extends AppCompatActivity {
         email.setText("Email:" + getIntent().getStringExtra("Email"));
         mobile.setText("Mobile:" + getIntent().getStringExtra("Mobile"));
         about.setText("About:" + getIntent().getStringExtra("About"));
-        position = getIntent().getIntExtra("click_position",0);
+        position = getIntent().getIntExtra("click_position", 0);
         call.setOnClickListener(new View.OnClickListener() {
 
             @Override
@@ -75,7 +75,7 @@ public class PersonelActivity extends AppCompatActivity {
                 Intent msgIntent = new Intent(Intent.ACTION_VIEW);
                 msgIntent.putExtra("sms_body", "default content");
                 msgIntent.setType("vnd.android-dir/mms-sms");
-                msgIntent.putExtra("address", new String("9738514840"));
+                msgIntent.putExtra("address", new String("1234567890"));
                 msgIntent.putExtra("sms_body", "Test ");
                 mcon.startActivity(msgIntent);
             }
@@ -98,13 +98,11 @@ public class PersonelActivity extends AppCompatActivity {
     }
 
     public void Details(int position) {
-
-        final String[] names = {"Mahesh", "Swetha", "Honey", "Jeevan", "Ravi", "Hemanth", "Sreeram"};
-        final int[] pid = {R.drawable.carpenter1, R.drawable.carpenter1, R.drawable.carpenter1, R.drawable.carpenter1, R.drawable.carpenter1, R.drawable.carpenter1, R.drawable.carpenter1};
-        final String[] mobileNum = {"9738514840", "9035113859", "9963435655", "9912027195", "9912027195", "8123461173", "77431592"};
-        final String[] emails = {"Mahesh123@gmail.com", "Swetha77@gmail.com", "Honey143@gmail.com", "Jeevan808@gmail.com", "Ravi867@gmail.com", "Hemanth436@gmail.com", "Sreeram456@gmail.com"};
-        final String[] Descp = {"Mahesh", "Swetha", "Honey", "Jeevan", "Ravi", "Hemanth", "Sreeram"};
-
+        final String[] names = {"Test1", "Test2", "Test3", "Test4", "Test5", "Test6", "Test7","Test8"};
+        final int[] pid = {R.drawable.carpenter1, R.drawable.carpenter1, R.drawable.carpenter1, R.drawable.carpenter1, R.drawable.carpenter1, R.drawable.carpenter1, R.drawable.carpenter1,R.drawable.carpenter1};
+        final String[] mobileNum = {"1234567890", "1234567890", "1234567890", "1234567890", "1234567890", "1234567890", "1234567890","1234567890"};
+        final String[] emails = {"Mahesh123@gmail.com", "tes1t@gmail.com", "test2@gmail.com", "test3@gmail.com", "test4@gmail.com", "test5@gmail.com", "test6@gmail.com","test7@gmail.com"};
+        final String[] Descp = {"Test1", "Test2", "Test3", "Test4", "Test5", "Test6", "Test7","Test8"};
         name.setText(names[position]);
         email.setText(emails[position]);
         mobile.setText(mobileNum[position]);

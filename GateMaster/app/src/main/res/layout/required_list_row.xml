@@ -66,26 +66,25 @@
                 android:layout_toRightOf="@+id/img" />
 
             <ImageButton
-                android:id="@+id/img1"
-                android:layout_width="34dp"
-                android:layout_height="32dp"
-                android:layout_above="@+id/rt"
-                android:layout_toEndOf="@+id/star"
-                android:layout_toRightOf="@+id/star"
-                android:layout_weight="1"
-                android:src="@drawable/face" />
-
-            <ImageButton
-                android:layout_width="34dp"
-                android:layout_height="32dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_alignTop="@+id/img1"
                 android:layout_marginLeft="10dp"
                 android:layout_marginStart="10dp"
                 android:layout_toEndOf="@+id/img1"
                 android:layout_toRightOf="@+id/img1"
                 android:layout_weight="1"
-                android:paddingRight="10dp"
                 android:src="@drawable/face" />
+
+            <ImageButton
+                android:id="@+id/img1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:src="@drawable/face"
+                android:layout_alignParentTop="true"
+                android:layout_toRightOf="@+id/star"
+                android:layout_toEndOf="@+id/star" />
         </RelativeLayout>
     </android.support.v7.widget.CardView>
 </LinearLayout>

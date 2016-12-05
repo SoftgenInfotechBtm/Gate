@@ -5,83 +5,17 @@
     android:layout_height="match_parent"
     tools:context="com.softgen.gate.activities.PersonelActivity">
 
-    <!--<ScrollView-->
-    <!--android:id="@+id/login_form"-->
-    <!--android:layout_width="match_parent"-->
-    <!--android:layout_height="match_parent">-->
     <include
         android:id="@+id/head"
         layout="@layout/header"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 
-    <ImageView
-        android:id="@+id/prfl"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/head"
-        android:src="@drawable/carpenter1" />
-
-    <TextView
-        android:id="@+id/name"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/prfl"
-        android:text="Name:Mahesh"
-        android:textSize="30dp"
-        android:textStyle="bold" />
-
-    <TextView
-        android:id="@+id/email"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/name"
-        android:text="Email:mahesh123@gmail.com"
-        android:textSize="20dp"
-        android:textStyle="bold" />
-
-    <TextView
-        android:id="@+id/mobile"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/email"
-        android:text="Mobile:9738514840"
-        android:textSize="20dp"
-        android:textStyle="bold" />
-
-    <ImageButton
-        android:id="@+id/call_service"
-        android:layout_width="34dp"
-        android:layout_height="34dp"
-        android:layout_alignTop="@+id/prfl"
-        android:layout_marginLeft="15dp"
-        android:layout_toRightOf="@+id/prfl"
-        android:src="@drawable/phone1" />
-
-    <ImageButton
-        android:id="@+id/message_service"
-        android:layout_width="34dp"
-        android:layout_height="34dp"
-        android:layout_alignTop="@+id/call_service"
-        android:layout_marginLeft="34dp"
-        android:layout_marginStart="34dp"
-        android:layout_toEndOf="@+id/call_service"
-        android:layout_toRightOf="@+id/call_service"
-        android:layout_weight="1"
-        android:paddingRight="10dp"
-        android:src="@drawable/messg1" />
-
-    <TextView
-        android:id="@+id/description"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/description"
-        android:textSize="20dp"
-        android:textStyle="bold"
-        android:layout_below="@+id/mobile"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
-
-    <!--</ScrollView>-->
+    <include
+        android:id="@+id/content_person_details"
+        layout="@layout/content_person_details"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/head" />
 
 </RelativeLayout>

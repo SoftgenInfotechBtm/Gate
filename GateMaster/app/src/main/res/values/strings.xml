@@ -32,10 +32,10 @@
     <string name="reg">Register</string>
     <string name="home">Home</string>
     <string name="resend">ReSend OTP</string>
-    <string name="forgot">Forgot Password.?</string>
+    <string name="forgot">Forgot Password ?</string>
     <string name="title_activity_signup">Sign in</string>
     <string name="title_activity_forgotpsw">Forgot Password</string>
-    <string name="remember">Keep Me Remember</string>
+    <string name="remember">Remember Me</string>
     <string name="otp">Get OTP</string>
     <string name="valid">Validate OTP</string>
     <string name="or">OR</string>
@@ -51,6 +51,7 @@
     <string name="title_activity_offered">Services Offered</string>
     <string name="title_activity_required">Services Required</string>
     <string name="spinner_title">Services Offered</string>
+    <string name="preferred_type">Preferred type</string>
     <string name="spinner_title1">Services Required</string>
 
     //array for services offered
@@ -86,7 +87,7 @@
         <item>Help</item>
     </string-array>
 
-    <string name="description">About:sssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssss</string>
+    <string name="description">About:Descriptions</string>
     <string name="title_activity_edit_profile">EditProfile</string>
     <string name="title_activity_places_visited">PlacesVisited</string>
     <string name="large_text">

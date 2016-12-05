@@ -1,3 +1,18 @@
+buildscript {
+    repositories {
+        maven { url 'https://maven.fabric.io/public' }
+    }
+
+    dependencies {
+        classpath 'io.fabric.tools:gradle:1.+'
+    }
+}
+apply plugin: 'com.android.application'
+apply plugin: 'io.fabric'
+
+repositories {
+    maven { url 'https://maven.fabric.io/public' }
+}
 apply plugin: 'com.android.application'
 
 android {
@@ -5,11 +20,14 @@ android {
     buildToolsVersion "24.0.3"
 
     defaultConfig {
-        applicationId "com.jeevan.gatedb"
+        applicationId "com.softgen.gate"
         minSdkVersion 15
         targetSdkVersion 24
         versionCode 2
-        versionName "1.0.0"
+        versionName "1.0.1"
+        // Enabling multidex support.
+        multiDexEnabled true
+        testInstrumentationRunner "android.test.InstrumentationTestRunner"
     }
     buildTypes {
         release {
@@ -18,13 +36,13 @@ android {
         }
     }
 }
-
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     testCompile 'junit:junit:4.12'
     compile('com.github.afollestad.material-dialogs:core:0.8.5.3@aar') {
         transitive = true
     }
+    compile 'com.android.support:multidex:1.0.0'
     compile 'com.android.support:appcompat-v7:24.2.1'
     compile 'com.android.support:design:24.2.1'
     compile 'com.weiwangcn.betterspinner:library-material:1.1.0'
@@ -32,6 +50,19 @@ dependencies {
     compile 'com.android.support:recyclerview-v7:24.2.1'
     compile 'org.apache.commons:commons-lang3:3.4'
     compile 'com.android.support:support-v4:24.2.1'
-    compile 'com.google.android.gms:play-services:7.5.0'
+    compile 'com.google.android.gms:play-services-maps:7.5.0'
     compile 'com.satsuware.lib:usefulviews:2.3.6'
+    compile('com.crashlytics.sdk.android:crashlytics:2.6.5@aar') {
+        transitive = true;
+    }
+
+    compile 'de.greenrobot:greendao:2.1.0'
+
+    // This is only needed if you want to use encrypted databases
+    compile 'net.zetetic:android-database-sqlcipher:3.5.4'
+
+    compile 'com.jakewharton.rxbinding:rxbinding:0.4.0'
+    compile 'io.reactivex:rxandroid:1.2.1'
+    compile 'io.reactivex:rxjava:1.1.8'
 }
+uploadArchives.enabled = false

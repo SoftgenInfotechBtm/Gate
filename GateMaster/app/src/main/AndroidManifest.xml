@@ -20,9 +20,10 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat.Light"
+        android:name="android.support.multidex.MultiDexApplication"
         tools:replace="android:icon,android:theme">
         <activity
-            android:name="com.softgen.gate.activities.MainActivity"
+            android:name="com.softgen.gate.activities.LoginActivity"
             android:label="@string/login"
             android:theme="@style/AppTheme"
             android:windowSoftInputMode="adjustResize|stateAlwaysHidden">
@@ -80,6 +81,9 @@
             android:name="com.softgen.gate.activities.MapsActivity"
             android:label="@string/title_activity_maps"
             android:theme="@style/AppTheme.NoActionBar" />
+        <meta-data
+            android:name="io.fabric.ApiKey"
+            android:value="b3ed6f9ae8b9d6cfdab4083570f22ba8ecb5695a" />
     </application>
 
 </manifest>

@@ -4,6 +4,8 @@
     <modules>
       <module fileurl="file://$PROJECT_DIR$/GateMaster.iml" filepath="$PROJECT_DIR$/GateMaster.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/greendao.lib/greendao.lib.iml" filepath="$PROJECT_DIR$/greendao.lib/greendao.lib.iml" />
+      <module fileurl="file://$PROJECT_DIR$/greenrobot_api/greenrobot_api.iml" filepath="$PROJECT_DIR$/greenrobot_api/greenrobot_api.iml" />
     </modules>
   </component>
 </project>

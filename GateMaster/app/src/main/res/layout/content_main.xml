@@ -5,13 +5,15 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context="com.softgen.gate.activities.MainActivity"
-    tools:showIn="@layout/app_bar_main">
+    tools:context="com.softgen.gate.activities.LoginActivity">
 
     <ScrollView
         android:id="@+id/login_form"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true">
 
         <LinearLayout
             android:layout_width="fill_parent"
@@ -105,12 +107,27 @@
                     android:inputType="textPassword" />
             </android.support.design.widget.TextInputLayout>
 
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
 
-            <CheckBox
-                android:id="@+id/checkBox"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/remember" />
+                <CheckBox
+                    android:id="@+id/checkBox"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentLeft="true"
+                    android:text="@string/remember" />
+
+                <TextView
+                    android:id="@+id/tv2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignBaseline="@+id/checkBox"
+                    android:layout_alignParentRight="true"
+                    android:text="@string/forgot"
+                    android:textColor="@color/colorPrimary" />
+            </RelativeLayout>
+
 
             <Button
                 android:id="@+id/login"
@@ -121,19 +138,6 @@
                 android:text="@string/login"
                 android:textColor="@android:color/white"
                 android:textSize="25sp" />
-
-            <TextView
-                android:id="@+id/tv2"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/checkBox"
-                android:layout_gravity="right"
-                android:layout_marginTop="15dp"
-                android:gravity="center_horizontal"
-                android:text="@string/forgot"
-                android:textColor="@color/colorPrimary"
-                android:textSize="20sp" />
-
 
             <TextView
                 android:id="@+id/tv1"

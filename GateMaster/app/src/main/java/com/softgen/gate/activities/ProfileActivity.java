@@ -70,14 +70,10 @@ public class ProfileActivity extends AppCompatActivity implements LabelledSpinne
         inputLayoutName = (TextInputLayout) findViewById(R.id.input_layout_name);
         inputEmail = (EditText) findViewById(R.id.input_email);
         inputEmail.setEnabled(false);
-        inputEmail.setText(getIntent().getStringExtra("email"));
-        Intent i = getIntent();
-        i.getStringExtra("email");
+//        inputEmail.setText(getIntent().getStringExtra("email"));
         inputmobileno = (EditText) findViewById(R.id.input_mob);
         inputmobileno.setEnabled(false);
-        inputmobileno.setText(getIntent().getStringExtra("mobile"));
-        Intent i2 = getIntent();
-        i2.getStringExtra("mobile");
+//        inputmobileno.setText(getIntent().getStringExtra("mobile"));
         inputLayoutcity = (TextInputLayout) findViewById(R.id.input_layout_city);
         inputLayoutstate = (TextInputLayout) findViewById(R.id.input_layout_state);
         inputLayoutarea = (TextInputLayout) findViewById(R.id.input_layout_area);
@@ -144,8 +140,8 @@ public class ProfileActivity extends AppCompatActivity implements LabelledSpinne
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 finish();
-                Intent i = new Intent(ProfileActivity.this, MainActivity.class);
-                startActivity(i);
+//                Intent i = new Intent(ProfileActivity.this, LoginActivity.class);
+//                startActivity(i);
             }
         });
         builder.setNegativeButton("No", new DialogInterface.OnClickListener() {

@@ -1,5 +1,6 @@
 package com.softgen.gate.activities;
 
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.ApplicationInfo;
@@ -21,6 +22,7 @@ import android.view.MenuItem;
 import android.view.View;
 
 import com.softgen.gate.gatedb.R;
+import com.softgen.gate.provider.SharedUtils;
 
 import java.io.File;
 
@@ -28,6 +30,7 @@ import java.io.File;
  * Created by 9Jeevan on 19-08-2016.
  */
 public class HomeActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
+    private Context mActivity;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,7 +38,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         setContentView(R.layout.activity_home);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
+        mActivity = HomeActivity.this;
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -64,8 +67,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 finish();
-                Intent i = new Intent(HomeActivity.this, MainActivity.class);
-                startActivity(i);
+                SharedUtils.saveLoginDisabled(mActivity, true);
             }
         });
         builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
@@ -139,9 +141,11 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
                 }
                 break;
             case R.id.nav_signOut:
-                Intent i4 = new Intent(this, MainActivity.class);
+                Intent i4 = new Intent(this, LoginActivity.class);
                 i4.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 i4.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+                SharedUtils.saveLoginDisabled(mActivity, false);
+                finish();
                 startActivity(i4);
                 break;
             default:

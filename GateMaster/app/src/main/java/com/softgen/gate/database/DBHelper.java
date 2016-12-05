@@ -21,6 +21,7 @@ import java.util.List;
  */
 public class DBHelper extends SQLiteOpenHelper {
     public static final String DATABASE_NAME = "GateServices.db";
+    public static final int DATABASE_VERSION = 2;
     //profile table of profile in gate db
     public static final String TABLE_PROFILE = "Profile";
 
@@ -89,7 +90,7 @@ public class DBHelper extends SQLiteOpenHelper {
             + " INTEGER PRIMARY KEY," + KEY_PLACES + " TEXT, " + KEY_CREATED_AT + " DATETIME " + ")";
 
     public DBHelper(Context context) {
-        super(context, DATABASE_NAME, null, 1);
+        super(context, DATABASE_NAME, null, DATABASE_VERSION);
         SQLiteDatabase db = this.getWritableDatabase();
     }
 

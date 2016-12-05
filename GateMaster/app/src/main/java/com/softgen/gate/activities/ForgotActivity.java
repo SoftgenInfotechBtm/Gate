@@ -16,7 +16,7 @@ import android.widget.EditText;
 import com.softgen.gate.gatedb.R;
 
 
-public class ForgotActivity extends AppCompatActivity {
+public class ForgotActivity extends AppCompatActivity implements View.OnClickListener{
     public Button confirm, getotp;
     public TextInputLayout inputLayoutEmail_mob;
     public EditText inputEmail_mob;
@@ -41,8 +41,9 @@ public class ForgotActivity extends AppCompatActivity {
                 emaill = inputEmail_mob.getText().toString();
                 if (!emaill.isEmpty() && emaill != null) {
                     emaill = inputEmail_mob.getText().toString();
-                } else
+                } else {
                     Snackbar.make(view, "Please Enter Valid Email/MobileNo", Snackbar.LENGTH_LONG).setAction("Action", null).show();
+                }
             }
         });
 
@@ -50,7 +51,7 @@ public class ForgotActivity extends AppCompatActivity {
         confirm.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent i2 = new Intent(ForgotActivity.this, MainActivity.class);
+                Intent i2 = new Intent(ForgotActivity.this, LoginActivity.class);
                 startActivity(i2);
             }
         });
@@ -86,5 +87,10 @@ public class ForgotActivity extends AppCompatActivity {
                 });
         AlertDialog alert = builder.create();
         alert.show();
+    }
+
+    @Override
+    public void onClick(View v) {
+
     }
 }

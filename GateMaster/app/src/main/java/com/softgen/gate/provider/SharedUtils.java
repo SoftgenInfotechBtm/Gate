@@ -9,6 +9,7 @@ import android.content.Context;
 public class SharedUtils {
     public static final String USER_NAME = "username";
     public static final String PASSWORD = "password";
+    public static final String IS_LOGOUT = "is_logout";
 
     public static String getUserName(Context context) {
         return context.getSharedPreferences(ConstantProperties.USER_FILE,
@@ -33,5 +34,15 @@ public class SharedUtils {
         context.getSharedPreferences(ConstantProperties.USER_FILE,
                 Context.MODE_PRIVATE).edit()
                 .putString(PASSWORD, name).commit();
+    }
+
+    public static void saveLoginDisabled(Context context, boolean isLoginDisabled) {
+        context.getSharedPreferences(ConstantProperties.USER_FILE, Context.MODE_PRIVATE)
+                .edit().putBoolean(IS_LOGOUT, isLoginDisabled).commit();
+    }
+
+    public static boolean isLoginDisabled(Context context) {
+        return context.getSharedPreferences(ConstantProperties.USER_FILE, Context.MODE_PRIVATE)
+                .getBoolean(IS_LOGOUT, false);
     }
 }
