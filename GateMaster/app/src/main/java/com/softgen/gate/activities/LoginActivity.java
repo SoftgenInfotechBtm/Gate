@@ -28,10 +28,9 @@ import com.softgen.gate.provider.SharedUtils;
 import io.fabric.sdk.android.Fabric;
 
 
-
 public class LoginActivity extends AppCompatActivity {
+    private final String DB_NAME = "gate.db";
     public Button btnSignUp;
-    private  final String DB_NAME ="gate.db" ;
     public TextView tv, tvv;
     public TextInputLayout inputLayoutName, inputLayoutEmail, inputLayoutPassword;
     public EditText inputName, inputEmail, inputPassword;
@@ -69,7 +68,8 @@ public class LoginActivity extends AppCompatActivity {
         inputPassword.addTextChangedListener(new MyTextWatcher(inputPassword));
         String username = SharedUtils.getUserName(mActivity);
         String password = SharedUtils.getPassword(mActivity);
-        if (username != null && password != null) {
+        boolean isChecked = SharedUtils.isUserPassword(mActivity);
+        if (isChecked && username != null && password != null) {
             inputName.setText(username);
             inputPassword.setText(password);
             rememberMe.setChecked(true);
@@ -80,7 +80,7 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 finish();
-                Intent i = new Intent(mActivity, ProfileActivity.class);
+                Intent i = new Intent(mActivity, RegisterActivity.class);
                 startActivity(i);
             }
         });
@@ -95,7 +95,6 @@ public class LoginActivity extends AppCompatActivity {
                 startActivity(in);
             }
         });
-
         btnSignUp = (Button) findViewById(R.id.login);
         btnSignUp.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -106,11 +105,12 @@ public class LoginActivity extends AppCompatActivity {
                 } else if (inputPassword.getText().toString().isEmpty()) {
                     Snackbar.make(view, "Password must be at-least 6 characters", Snackbar.LENGTH_LONG).setAction("Action", null).show();
                 } else {
-                    boolean flags = db.getUserData(inputName.getText().toString(), inputPassword.getText().toString());
+                    boolean flags = db.getUserData(inputName.getText().toString(), inputPassword.getText().toString(),mActivity);
                     if (flags) {
                         if (rememberMe.isChecked()) {
                             SharedUtils.storeUserName(mActivity, inputName.getText().toString());
                             SharedUtils.storePasword(mActivity, inputPassword.getText().toString());
+                            SharedUtils.saveUserPassword(mActivity, true);
                         }
                         Intent i1 = new Intent(mActivity, HomeActivity.class);
                         startActivity(i1);
@@ -188,7 +188,7 @@ public class LoginActivity extends AppCompatActivity {
         }
     }
 
-    public void setupDb(){
+    public void setupDb() {
         DaoMaster.DevOpenHelper masterHelper = new DaoMaster.DevOpenHelper(this, DB_NAME, null); //create database db file if not exist
         SQLiteDatabase db = masterHelper.getWritableDatabase();  //get the created database db file
         DaoMaster master = new DaoMaster(db);//create masterDao

@@ -16,8 +16,45 @@ public class ProfileMaster {
     private String offered;
     private String required;
     private String password;
+    private String cost;
+
+    private String duration;
+    private String startTime;
+    private String endTime;
     private Date createdAt;
     private Date updatedAt;
+
+    public String getCost() {
+        return cost;
+    }
+
+    public void setCost(String cost) {
+        this.cost = cost;
+    }
+
+    public String getDuration() {
+        return duration;
+    }
+
+    public void setDuration(String duration) {
+        this.duration = duration;
+    }
+
+    public String getStartTime() {
+        return startTime;
+    }
+
+    public void setStartTime(String startTime) {
+        this.startTime = startTime;
+    }
+
+    public String getEndTime() {
+        return endTime;
+    }
+
+    public void setEndTime(String endTime) {
+        this.endTime = endTime;
+    }
 
     public String getUserID() {
         return userID;
@@ -107,8 +144,8 @@ public class ProfileMaster {
         this.password = password;
     }
 
-    public String toString(){
-        return username +" "+ password;
+    public String toString() {
+        return username + " " + password;
     }
 
     public Date getUpdatedAt() {

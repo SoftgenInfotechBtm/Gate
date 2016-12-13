@@ -84,6 +84,9 @@
         <meta-data
             android:name="io.fabric.ApiKey"
             android:value="b3ed6f9ae8b9d6cfdab4083570f22ba8ecb5695a" />
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="@string/google_maps_key" />
     </application>
 
 </manifest>

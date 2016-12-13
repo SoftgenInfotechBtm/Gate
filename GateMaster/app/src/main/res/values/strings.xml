@@ -53,6 +53,10 @@
     <string name="spinner_title">Services Offered</string>
     <string name="preferred_type">Preferred type</string>
     <string name="spinner_title1">Services Required</string>
+    <string name="start_time">Start Time</string>
+    <string name="end_time">End Time</string>
+    <string name="cost">Cost</string>
+    <string name="duration">Duration</string>
 
     //array for services offered
     <string-array name="services_offered">
@@ -62,7 +66,11 @@
         <item>"Carpenter"</item>
         <item>"Interior"</item>
     </string-array>
-
+    //array for services cost
+    <string-array name="cost_details">
+        <item>Per Hour</item>
+        <item>Per Day</item>
+    </string-array>
     //array for services required
     <string-array name="services_required">
         <item>"Painting"</item>
