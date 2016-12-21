@@ -59,7 +59,7 @@ public class EditProfileActivity extends AppCompatActivity implements LabelledSp
     EditText etCost;
     private DBHelper db;
     private String TAG = "", MODULE = "Edit Profile";
-    private LabelledSpinner spinner1, spinner2, spinDuartion;
+    private LabelledSpinner spinDuartion;
     private String mServicesOffered;
     private String mServicesReceived;
     private Utils utils;
@@ -93,15 +93,6 @@ public class EditProfileActivity extends AppCompatActivity implements LabelledSp
         mActivity = EditProfileActivity.this;
         utils = new Utils(mActivity);
         ButterKnife.bind(this);
-        //spinner for services offered
-        spinner1 = (LabelledSpinner) findViewById(R.id.services_offered);
-        spinner1.setItemsArray(R.array.services_offered);
-        spinner1.setOnItemChosenListener(this);
-        //spinner for services required
-        spinner2 = (LabelledSpinner) findViewById(R.id.services_required);
-        spinner2.setItemsArray(R.array.services_required);
-        spinner2.setOnItemChosenListener(this);
-
         spinDuartion = (LabelledSpinner) findViewById(R.id.services_charges);
         spinDuartion.setItemsArray(R.array.cost_details);
         spinDuartion.setOnItemChosenListener(this);
@@ -180,8 +171,6 @@ public class EditProfileActivity extends AppCompatActivity implements LabelledSp
             etCity.setText(getdetails.get(0).getCity());
             etState.setText(getdetails.get(0).getState());
             etArea.setText(getdetails.get(0).getArea());
-            spinner1.setSelection(getIndex(getResources().getStringArray(R.array.services_offered), getdetails.get(0).getOffered()));
-            spinner2.setSelection(getIndex(getResources().getStringArray(R.array.services_required), getdetails.get(0).getRequired()));
             etCost.setText(getdetails.get(0).getCost());
             spinDuartion.setSelection(getIndex(getResources().getStringArray(R.array.cost_details), getdetails.get(0).getDuration()));
             etStartTime.setText(getdetails.get(0).getStartTime());

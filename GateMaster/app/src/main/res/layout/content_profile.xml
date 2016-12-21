@@ -106,20 +106,55 @@
                     android:maxLength="6" />
             </android.support.design.widget.TextInputLayout>
 
-
-            <com.satsuware.usefulviews.LabelledSpinner
-                android:id="@+id/services_offered"
+            <LinearLayout
+                android:id="@+id/ll_services_off"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                ls:labelText="@string/spinner_title"
-                ls:widgetColor="@color/colorPrimary" />
+                android:layout_marginTop="5dp"
+                android:orientation="vertical">
 
-            <com.satsuware.usefulviews.LabelledSpinner
-                android:id="@+id/services_required"
+            </LinearLayout>
+
+            <android.support.design.widget.TextInputLayout
+                android:id="@+id/til_ser_offered"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <com.softgen.gate.utility.InstantAutoCompleteTextView
+                    android:id="@+id/services_offered"
+                    android:layout_width="match_parent"
+                    android:layout_height="45dp"
+                    android:digits="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890 "
+                    android:drawablePadding="10dp"
+                    android:drawableRight="@drawable/ic_arrow_drop_down"
+                    android:hint="@string/spinner_title"
+                    android:inputType="text"
+                    android:textColor="@android:color/black" />
+            </android.support.design.widget.TextInputLayout>
+            <LinearLayout
+                android:id="@+id/ll_services_req"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                ls:labelText="@string/spinner_title1"
-                ls:widgetColor="@color/colorPrimary" />
+                android:layout_marginTop="10dp"
+                android:orientation="vertical">
+
+            </LinearLayout>
+            <android.support.design.widget.TextInputLayout
+                android:id="@+id/til_ser_required"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <com.softgen.gate.utility.InstantAutoCompleteTextView
+                    android:id="@+id/services_required"
+                    android:layout_width="match_parent"
+                    android:layout_height="45dp"
+                    android:digits="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890 "
+                    android:drawablePadding="10dp"
+                    android:drawableRight="@drawable/ic_arrow_drop_down"
+                    android:hint="@string/spinner_title1"
+                    android:inputType="text"
+                    android:textColor="@android:color/black" />
+            </android.support.design.widget.TextInputLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"

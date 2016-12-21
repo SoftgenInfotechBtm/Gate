@@ -1,1 +1,1 @@
-include ':app', ':greendao.lib', ':greenrobot_api'
+include ':app', ':greendao.lib'

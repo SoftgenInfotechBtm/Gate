@@ -1,0 +1,43 @@
+{
+  "project_info": {
+    "project_number": "1091952707161",
+    "project_id": "gate-services"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1091952707161:android:0fbc877b515a6ffc",
+        "android_client_info": {
+          "package_name": "com.softgen.gate"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1091952707161-r02olic6fkarjm042rf2006a36p9h7lp.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDmtNIv3m2jf37HPoYXA9pK871K9zclOZc"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 2,
+          "analytics_property": {
+            "tracking_id": "UA-85499739-3"
+          }
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 1
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -69,11 +69,22 @@ public class LoginActivity extends AppCompatActivity {
         String username = SharedUtils.getUserName(mActivity);
         String password = SharedUtils.getPassword(mActivity);
         boolean isChecked = SharedUtils.isUserPassword(mActivity);
-        if (isChecked && username != null && password != null) {
+        if (isChecked && username != null && !username.isEmpty() && password != null && !password.isEmpty()) {
             inputName.setText(username);
             inputPassword.setText(password);
             rememberMe.setChecked(true);
         }
+
+        findViewById(R.id.fb).setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View view) {
+                finish();
+                Intent in = new Intent(mActivity, FaceBookActivity.class);
+                startActivity(in);
+            }
+        });
+
         tv = (TextView) findViewById(R.id.tv1);
         tv.setOnClickListener(new View.OnClickListener() {
 
@@ -105,12 +116,16 @@ public class LoginActivity extends AppCompatActivity {
                 } else if (inputPassword.getText().toString().isEmpty()) {
                     Snackbar.make(view, "Password must be at-least 6 characters", Snackbar.LENGTH_LONG).setAction("Action", null).show();
                 } else {
-                    boolean flags = db.getUserData(inputName.getText().toString(), inputPassword.getText().toString(),mActivity);
+                    boolean flags = db.getUserData(inputName.getText().toString(), inputPassword.getText().toString(), mActivity);
                     if (flags) {
                         if (rememberMe.isChecked()) {
                             SharedUtils.storeUserName(mActivity, inputName.getText().toString());
                             SharedUtils.storePasword(mActivity, inputPassword.getText().toString());
                             SharedUtils.saveUserPassword(mActivity, true);
+                        } else {
+                            SharedUtils.storeUserName(mActivity, "");
+                            SharedUtils.storePasword(mActivity, "");
+                            SharedUtils.saveUserPassword(mActivity, false);
                         }
                         Intent i1 = new Intent(mActivity, HomeActivity.class);
                         startActivity(i1);

@@ -1,48 +1,71 @@
 package com.softgen.gate.activities;
 
-import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.TimePickerDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.os.Build;
 import android.os.Bundle;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
+import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.TimePicker;
 
 import com.satsuware.usefulviews.LabelledSpinner;
 import com.softgen.gate.database.DBHelper;
 import com.softgen.gate.gatedb.R;
 import com.softgen.gate.model.ProfileMaster;
+import com.softgen.gate.utility.InstantAutoCompleteTextView;
 import com.softgen.gate.utility.Utils;
 import com.wdullaer.materialdatetimepicker.date.DatePickerDialog;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+
+import static com.softgen.gate.utility.Utils.loadJSONFromAsset;
 
 public class ProfileActivity extends AppCompatActivity implements LabelledSpinner.OnItemChosenListener, DatePickerDialog.OnDateSetListener, View.OnClickListener {
     private Button button;
     private String TAG = "", MODULE = "Adding Profile";
     private Activity mActivity;
-    private EditText inputName, inputEmail, inputmobileno, inputPassword, inputcity, inputstate, inputarea, inputoffered, inputrequired, inputconfirm, inputStart, inputEnd, inputCost;
+    private TextInputLayout tilServicesOffered, tilServicesRequired;
+    private InstantAutoCompleteTextView atvServicesOffered, atvServicesRequired;
+    private EditText etName, etEmail, etMobileNo, etPassword, etCity, etState, etArea, etConfirm, etStart, etEnd, etCost;
     private Utils utils;
     private DBHelper db;
-    private LabelledSpinner spinner1, spinner2, spinDuartion;
+    private LabelledSpinner spinDuartion;
     private String mServicesOffered;
     private String mServicesReceived;
+    private ArrayList<String> lServicesOffered;
+    private ArrayList<String> lServicesReceived;
     private String mServicesCharges;
     private String jsonDate;
     private String validFrom;
     private String selectedDay;
+    private LinearLayout llServicesOffered;
+    private LinearLayout llServicesRequired;
+    private ArrayList<String> serviceList;
+    private CoordinatorLayout profileAct;
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -61,48 +84,77 @@ public class ProfileActivity extends AppCompatActivity implements LabelledSpinne
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
+        initUI();
+    }
+
+    private void initUI() {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         toolbar.setTitle("Profile");
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        db = new DBHelper(ProfileActivity.this);
+        profileAct = (CoordinatorLayout) findViewById(R.id.profile_co);
         mActivity = ProfileActivity.this;
         utils = new Utils(mActivity);
-        //spinner for services offered
-        spinner1 = (LabelledSpinner) findViewById(R.id.services_offered);
-        spinner1.setItemsArray(R.array.services_offered);
-        spinner1.setOnItemChosenListener(this);
-        //spinner for services required
-        spinner2 = (LabelledSpinner) findViewById(R.id.services_required);
-        spinner2.setItemsArray(R.array.services_required);
-        spinner2.setOnItemChosenListener(this);
-
+        tilServicesOffered = (TextInputLayout) findViewById(R.id.til_ser_offered);
+        tilServicesRequired = (TextInputLayout) findViewById(R.id.til_ser_required);
+        atvServicesOffered = (InstantAutoCompleteTextView) findViewById(R.id.services_offered);
+        atvServicesRequired = (InstantAutoCompleteTextView) findViewById(R.id.services_required);
+        llServicesOffered = (LinearLayout) findViewById(R.id.ll_services_off);
+        llServicesRequired = (LinearLayout) findViewById(R.id.ll_services_req);
+        etEmail = (EditText) findViewById(R.id.input_email);
+        etMobileNo = (EditText) findViewById(R.id.input_mob);
+        etName = (EditText) findViewById(R.id.input_name);
+        etCity = (EditText) findViewById(R.id.input_city);
+        etState = (EditText) findViewById(R.id.input_state);
+        etArea = (EditText) findViewById(R.id.input_area);
+        etPassword = (EditText) findViewById(R.id.password);
+        etConfirm = (EditText) findViewById(R.id.confirm_password);
+        etStart = (EditText) findViewById(R.id.start_time);
+        etEnd = (EditText) findViewById(R.id.end_time);
+        etCost = (EditText) findViewById(R.id.cost);
+        button = (Button) findViewById(R.id.btn_sign_up);
         spinDuartion = (LabelledSpinner) findViewById(R.id.services_charges);
         spinDuartion.setItemsArray(R.array.cost_details);
+        lServicesOffered = new ArrayList<String>();
+        lServicesReceived = new ArrayList<String>();
+        if (getIntent().getStringExtra("email") != null)
+            etEmail.setText(getIntent().getStringExtra("email"));
+        else
+            etEmail.setText("testmahesh547@gmail.com");
+        if (getIntent().getStringExtra("mobile") != null)
+            etMobileNo.setText(getIntent().getStringExtra("mobile"));
+        else
+            etMobileNo.setText("9738514840");
+        etEmail.setEnabled(false);
+        etMobileNo.setEnabled(false);
+        initListeners();
+    }
+
+    private void initListeners() {
         spinDuartion.setOnItemChosenListener(this);
-
-        db = new DBHelper(ProfileActivity.this);
-
-        //layouts for edit texts
-        inputEmail = (EditText) findViewById(R.id.input_email);
-        inputEmail.setEnabled(false);
-        inputEmail.setText(getIntent().getStringExtra("email"));
-        inputmobileno = (EditText) findViewById(R.id.input_mob);
-        inputmobileno.setEnabled(false);
-        inputmobileno.setText(getIntent().getStringExtra("mobile"));
-
-        //ids for edit texts
-        inputName = (EditText) findViewById(R.id.input_name);
-        inputcity = (EditText) findViewById(R.id.input_city);
-        inputstate = (EditText) findViewById(R.id.input_state);
-        inputarea = (EditText) findViewById(R.id.input_area);
-        inputPassword = (EditText) findViewById(R.id.password);
-        inputconfirm = (EditText) findViewById(R.id.confirm_password);
-        inputStart = (EditText) findViewById(R.id.start_time);
-        inputEnd = (EditText) findViewById(R.id.end_time);
-        inputCost = (EditText) findViewById(R.id.cost);
-        inputStart.setOnClickListener(this);
-        inputEnd.setOnClickListener(this);
-        inputStart.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+        etStart.setOnClickListener(this);
+        etEnd.setOnClickListener(this);
+        button.setOnClickListener(this);
+        atvServicesOffered.setThreshold(0);
+        atvServicesRequired.setThreshold(0);
+        serviceList = new ArrayList<String>();
+        try {
+            JSONObject obj = new JSONObject(loadJSONFromAsset(getApplicationContext()));
+            JSONArray jsonArray = obj.getJSONArray("services");
+            if (jsonArray != null) {
+                int len = jsonArray.length();
+                for (int i = 0; i < len; i++) {
+                    serviceList.add(jsonArray.get(i).toString());
+                }
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        ArrayAdapter<String> adapterDoctor = new ArrayAdapter<>(this, android.R.layout.simple_dropdown_item_1line, serviceList);
+        atvServicesOffered.setAdapter(adapterDoctor);
+        atvServicesRequired.setAdapter(adapterDoctor);
+        etStart.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View view, boolean b) {
                 if (b) {
@@ -111,7 +163,7 @@ public class ProfileActivity extends AppCompatActivity implements LabelledSpinne
             }
         });
 
-        inputEnd.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+        etEnd.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View view, boolean b) {
                 if (b) {
@@ -119,49 +171,89 @@ public class ProfileActivity extends AppCompatActivity implements LabelledSpinne
                 }
             }
         });
-        button = (Button) findViewById(R.id.btn_sign_up);
-        button.setOnClickListener(new View.OnClickListener() {
-            @TargetApi(Build.VERSION_CODES.GINGERBREAD)
+        atvServicesOffered.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
-            public void onClick(View view) {
-                if (inputName.getText().toString().isEmpty() && inputEmail.getText().toString().isEmpty()
-                        && inputmobileno.getText().toString().isEmpty() && inputcity.getText().toString().isEmpty()
-                        && inputstate.getText().toString().isEmpty() && inputarea.getText().toString().isEmpty()
-                        && inputPassword.getText().toString().isEmpty() && inputconfirm.getText().toString().isEmpty()) {
-                    Snackbar.make(view, "Fields Cannot be empty", Snackbar.LENGTH_LONG).setAction("Action", null).show();
-                } else if (inputPassword.getText().toString().length() < 8
-                        || (inputconfirm.getText().toString().length() < 8)) {
-                    Snackbar.make(view, "Password must be at-least 8 characters", Snackbar.LENGTH_LONG).setAction("Action", null).show();
+            public void onItemClick(AdapterView<?> parent, View view, final int position, long id) {
+                LayoutInflater inflater = (LayoutInflater) getBaseContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                View to_add = inflater.inflate(R.layout.item_services, llServicesOffered, false);
+                final TextView serviceList = (TextView) to_add.findViewById(R.id.tv_service);
+                final ImageView cancel = (ImageView) to_add.findViewById(R.id.iv_close);
+                serviceList.setText(parent.getItemAtPosition(position).toString());
+                cancel.setId(position);
+                if (checkAlreadyExist(llServicesOffered, parent.getItemAtPosition(position).toString())) {
+                    to_add.setId(position);
+                    lServicesOffered.add(serviceList.getText().toString());
+                    llServicesOffered.addView(to_add);
+                    atvServicesOffered.setText("");
                 } else {
-                    if (!inputPassword.getText().toString().equals(inputconfirm.getText().toString())) {
-                        Snackbar.make(view, "Passwords Doesn't Match", Snackbar.LENGTH_LONG).setAction("Action", null).show();
-                    } else {
-                        ProfileMaster master = new ProfileMaster();
-                        master.setUsername(inputName.getText().toString());
-                        master.setEmail(inputEmail.getText().toString());
-                        master.setMobile(inputmobileno.getText().toString());
-                        master.setCity(inputcity.getText().toString());
-                        master.setState(inputstate.getText().toString());
-                        master.setArea(inputarea.getText().toString());
-                        master.setOffered(mServicesOffered);
-                        master.setRequired(mServicesReceived);
-                        master.setPassword(inputconfirm.getText().toString());
-                        master.setCost(inputCost.getText().toString());
-                        master.setDuration(mServicesCharges);
-                        master.setStartTime(inputStart.getText().toString());
-                        master.setEndTime(inputEnd.getText().toString());
-                        master.setCreatedAt(new Date());
-                        master.setUpdatedAt(new Date());
-                        Log.e("values", master + "");
-                        db.createProfileUser(master);
-                        Intent intent = new Intent(ProfileActivity.this, HomeActivity.class);
-                        startActivity(intent);
-                        finish();
-                    }
+                    Snackbar.make(profileAct, "Already Added", Snackbar.LENGTH_SHORT).show();
+                    atvServicesOffered.setText("");
                 }
+                cancel.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        int childCount = llServicesOffered.getChildCount();
+                        for (int i = 0; i < childCount; i++) {
+                            if (llServicesOffered.getChildAt(i).getId() == cancel.getId()) {
+                                String serviceName = serviceList.getText().toString();
+                                lServicesOffered.remove(serviceName);
+                                llServicesOffered.removeViewAt(i);
+                                break;
+                            }
+                        }
+                    }
+                });
+            }
+        });
+        atvServicesRequired.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, final int position, long id) {
+                final int pos = position;
+                LayoutInflater inflater = (LayoutInflater) getBaseContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                View to_add = inflater.inflate(R.layout.item_services, llServicesRequired, false);
+                final TextView serviceList = (TextView) to_add.findViewById(R.id.tv_service);
+                final ImageView cancel = (ImageView) to_add.findViewById(R.id.iv_close);
+                cancel.setId(position);
+                serviceList.setText(parent.getItemAtPosition(position).toString());
+                if (checkAlreadyExist(llServicesRequired, parent.getItemAtPosition(position).toString())) {
+                    to_add.setId(position);
+                    lServicesReceived.add(serviceList.getText().toString());
+                    llServicesRequired.addView(to_add);
+                    atvServicesRequired.setText("");
+                } else {
+                    Snackbar.make(profileAct, "Already Added", Snackbar.LENGTH_SHORT).show();
+                    atvServicesRequired.setText("");
+                }
+                cancel.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        int childCount = llServicesRequired.getChildCount();
+                        for (int i = 0; i < childCount; i++) {
+                            if (llServicesRequired.getChildAt(i).getId() == cancel.getId()) {
+                                String serviceName = serviceList.getText().toString();
+                                lServicesReceived.remove(serviceName);
+                                llServicesRequired.removeViewAt(i);
+                                break;
+                            }
+                        }
+                    }
+                });
             }
         });
     }
+
+    private boolean checkAlreadyExist(LinearLayout llServicesOffered, String name) {
+        int childCount = llServicesOffered.getChildCount();
+        for (int i = 0; i < childCount; i++) {
+            RelativeLayout childView = (RelativeLayout) llServicesOffered.getChildAt(i);
+            TextView serviceData = (TextView) childView.findViewById(R.id.tv_service);
+            if (serviceData.getText().toString().equals(name)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
 
     @Override
     public void onBackPressed() {
@@ -190,12 +282,6 @@ public class ProfileActivity extends AppCompatActivity implements LabelledSpinne
     @Override
     public void onItemChosen(View labelledSpinner, AdapterView<?> adapterView, View itemView, int position, long id) {
         switch (labelledSpinner.getId()) {
-            case R.id.services_offered:
-                mServicesOffered = adapterView.getItemAtPosition(position).toString();
-                break;
-            case R.id.services_required:
-                mServicesReceived = adapterView.getItemAtPosition(position).toString();
-                break;
             case R.id.services_charges:
                 mServicesCharges = adapterView.getItemAtPosition(position).toString();
                 break;
@@ -217,14 +303,14 @@ public class ProfileActivity extends AppCompatActivity implements LabelledSpinne
                     new TimePickerDialog.OnTimeSetListener() {
 
                         @Override
-                        public void onTimeSet(TimePicker view, int hourOfDay,int minute) {
+                        public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
                             String AM_PM = "";
                             Calendar datetime = Calendar.getInstance();
                             datetime.set(Calendar.HOUR_OF_DAY, hourOfDay);
                             datetime.set(Calendar.MINUTE, minute);
                             int mAm_PM = datetime.get(Calendar.AM_PM);
                             int mHour = datetime.get(Calendar.HOUR);
-                            if ( mAm_PM == Calendar.AM)
+                            if (mAm_PM == Calendar.AM)
                                 AM_PM = "AM";
                             else if (mAm_PM == Calendar.PM)
                                 AM_PM = "PM";
@@ -245,14 +331,14 @@ public class ProfileActivity extends AppCompatActivity implements LabelledSpinne
     private void setTime(int tv, String time) {
         try {
             if ((tv == 0)) {
-                inputStart.setText(time);
-                inputEnd.setText("");
+                etStart.setText(time);
+                etEnd.setText("");
             } else if (tv == 1) {
-                String t = inputStart.getText().toString();
+                String t = etStart.getText().toString();
                 if (Utils.isGreaterThan24(t, time)) {
                     Utils.alertBox(mActivity, "Time should be less than 24 hous!");
                 } else {
-                    inputEnd.setText(time);
+                    etEnd.setText(time);
                 }
             }
         } catch (Exception e) {
@@ -291,7 +377,56 @@ public class ProfileActivity extends AppCompatActivity implements LabelledSpinne
             case R.id.end_time:
                 pickTime(1);
                 break;
+            case R.id.btn_sign_up:
+                if (validateCredentials())
+                    insertToDatabase();
+                break;
         }
+    }
+
+    private void insertToDatabase() {
+        ProfileMaster master = new ProfileMaster();
+        master.setUsername(etName.getText().toString());
+        master.setEmail(etEmail.getText().toString());
+        master.setMobile(etMobileNo.getText().toString());
+        master.setCity(etCity.getText().toString());
+        master.setState(etState.getText().toString());
+        master.setArea(etArea.getText().toString());
+        master.setOffered(mServicesOffered);
+        master.setRequired(mServicesReceived);
+        master.setPassword(etConfirm.getText().toString());
+        master.setCost(etCost.getText().toString());
+        master.setDuration(mServicesCharges);
+        master.setStartTime(etStart.getText().toString());
+        master.setEndTime(etEnd.getText().toString());
+        master.setCreatedAt(new Date());
+        master.setUpdatedAt(new Date());
+        Log.e("values", master + "");
+        db.createProfileUser(master);
+        db.createOfferedList(master, lServicesOffered);
+        db.createRequiredList(master, lServicesReceived);
+        Intent intent = new Intent(ProfileActivity.this, HomeActivity.class);
+        startActivity(intent);
+        finish();
+    }
+
+    private boolean validateCredentials() {
+        if (etName.getText().toString().isEmpty() && etEmail.getText().toString().isEmpty()
+                && etMobileNo.getText().toString().isEmpty() && etCity.getText().toString().isEmpty()
+                && etState.getText().toString().isEmpty() && etArea.getText().toString().isEmpty()
+                && etPassword.getText().toString().isEmpty() && etConfirm.getText().toString().isEmpty()) {
+            Snackbar.make(profileAct, "Fields Cannot be empty", Snackbar.LENGTH_LONG).setAction("Action", null).show();
+        } else if (etPassword.getText().toString().length() < 8
+                || (etConfirm.getText().toString().length() < 8)) {
+            Snackbar.make(profileAct, "Password must be at-least 8 characters", Snackbar.LENGTH_LONG).setAction("Action", null).show();
+        } else {
+            if (!etPassword.getText().toString().equals(etConfirm.getText().toString())) {
+                Snackbar.make(profileAct, "Passwords Doesn't Match", Snackbar.LENGTH_LONG).setAction("Action", null).show();
+            } else {
+                return true;
+            }
+        }
+        return false;
     }
 }
 
