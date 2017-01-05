@@ -17,7 +17,6 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.crashlytics.android.Crashlytics;
 import com.softgen.gate.database.DBHelper;
@@ -91,7 +90,7 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 finish();
-                Intent i = new Intent(mActivity, RegisterActivity.class);
+                Intent i = new Intent(mActivity, ProfileActivity.class);
                 startActivity(i);
             }
         });
@@ -135,26 +134,6 @@ public class LoginActivity extends AppCompatActivity {
                 }
             }
         });
-    }
-
-    /**
-     * Validating form
-     */
-    public boolean submitForm() {
-        if (!validateName()) {
-            return false;
-        }
-
-        if (!validateEmail()) {
-            return false;
-        }
-
-        if (!validatePassword()) {
-            return false;
-        }
-
-        Toast.makeText(getApplicationContext(), "Thank You!", Toast.LENGTH_SHORT).show();
-        return false;
     }
 
     private boolean validateName() {

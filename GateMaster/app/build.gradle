@@ -49,10 +49,19 @@ android {
 }
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
-    testCompile 'junit:junit:4.12'
     compile('com.github.afollestad.material-dialogs:core:0.8.5.3@aar') {
         transitive = true
     }
+    compile('com.crashlytics.sdk.android:crashlytics:2.6.5@aar') {
+        transitive = true;
+    }
+    compile('com.github.afollestad.material-dialogs:core:0.8.5.3@aar') {
+        transitive = true
+    }
+
+    // This is only needed if you want to use encrypted databases
+
+
     compile 'com.android.support:multidex:1.0.0'
     compile 'com.android.support:appcompat-v7:24.2.1'
     compile 'com.android.support:design:24.2.1'
@@ -64,28 +73,24 @@ dependencies {
     compile 'com.android.support:support-v4:24.2.1'
     compile 'pl.rspective.pagerdatepicker:pagerdatepicker:1.0.0'
     compile 'de.hdodenhof:circleimageview:2.1.0'
-    compile 'com.google.android.gms:play-services-maps:9.0.0'
-    compile 'com.google.android.gms:play-services-auth:9.0.0'
+    compile 'com.google.android.gms:play-services-maps:10.0.1'
+    compile 'com.google.android.gms:play-services-auth:10.0.1'
     compile 'com.github.bumptech.glide:glide:3.7.0'
     compile 'com.satsuware.lib:usefulviews:2.3.6'
     compile 'com.facebook.android:facebook-android-sdk:[4,5)'
-    compile('com.crashlytics.sdk.android:crashlytics:2.6.5@aar') {
-        transitive = true;
-    }
-    compile('com.github.afollestad.material-dialogs:core:0.8.5.3@aar') {
-        transitive = true
-    }
     compile 'de.greenrobot:greendao:2.1.0'
-
-    // This is only needed if you want to use encrypted databases
     compile 'net.zetetic:android-database-sqlcipher:3.5.4'
-
     compile 'com.jakewharton.rxbinding:rxbinding:0.4.0'
     compile 'io.reactivex:rxandroid:1.2.1'
     compile 'io.reactivex:rxjava:1.1.8'
-
     compile 'com.jakewharton:butterknife:8.4.0'
+    compile 'com.roughike:bottom-bar:2.0.2'
+    compile 'com.github.armcha:SpaceNavigationView:1.5.0'
+    compile 'com.github.freshdesk:hotline-android:1.1.+'
+    testCompile 'junit:junit:4.12'
     annotationProcessor 'com.jakewharton:butterknife-compiler:8.4.0'
+    compile 'com.synnapps:carouselview:0.0.10'
+    compile 'com.jakewharton.picasso:picasso2-okhttp3-downloader:1.0.2'
 }
 apply plugin: 'com.google.gms.google-services'
 uploadArchives.enabled = false

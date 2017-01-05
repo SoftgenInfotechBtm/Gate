@@ -22,24 +22,16 @@ import com.softgen.gate.asynctask.SendEmailTask;
 import com.softgen.gate.database.DBHelper;
 import com.softgen.gate.gatedb.R;
 import com.softgen.gate.model.OTPMaster;
-import com.softgen.gate.provider.UtilsProvider;
-import com.softgen.gate.sender.GMailSender;
 
 import java.util.Date;
 
 public class RegisterActivity extends AppCompatActivity implements View.OnClickListener, SendEmailTask.Callback {
     private static final String EmailPattern = "^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,4})$";
 
-    String mobileno;
-    String userid;
+    private String mobileNo;
     private Button otp, register;
-    private TextInputLayout inputLayoutEntercode;
-    private TextInputLayout inputLayoutEnterEmail;
-    private TextInputLayout inputLayoutEnterMobileNo;
     private TextInputLayout inputLayoutEnterOtp;
     private TextView resend;
-    private EditText inputEntercode;
-    private UtilsProvider utils;
     private Activity mActivity;
     private EditText inputEnterEmail;
     private EditText inputEnterMobileNo;
@@ -47,8 +39,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
     private DBHelper db;
     private CoordinatorLayout coordinatorLayout;
     private CheckBox checkTermsConditions;
-    private String emailid;
-    private GMailSender mailsender;
+    private String emailId;
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -71,16 +62,13 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
 
     private void InitUI() {
         mActivity = RegisterActivity.this;
-        utils = new UtilsProvider(mActivity);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         toolbar.setTitle("Register");
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         db = new DBHelper(mActivity);
         coordinatorLayout = (CoordinatorLayout) findViewById(R.id.coordinator_layout);
-        inputLayoutEnterEmail = (TextInputLayout) findViewById(R.id.input_layout_email);
         inputEnterEmail = (EditText) findViewById(R.id.input_email);
-        inputLayoutEnterMobileNo = (TextInputLayout) findViewById(R.id.input_layout_mob1);
         inputEnterMobileNo = (EditText) findViewById(R.id.input_mob1);
         inputLayoutEnterOtp = (TextInputLayout) findViewById(R.id.input_layout_otp);
         inputEnterOtp = (EditText) findViewById(R.id.input_otp);
@@ -98,25 +86,25 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
     }
 
     private void setValues() {
-        emailid = String.valueOf(inputEnterEmail.getText());
-        mobileno = String.valueOf(inputEnterMobileNo.getText());
+        emailId = String.valueOf(inputEnterEmail.getText());
+        mobileNo = String.valueOf(inputEnterMobileNo.getText());
     }
 
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.otp:
-                emailid = String.valueOf(inputEnterEmail.getText());
-                mobileno = String.valueOf(inputEnterMobileNo.getText());
-                String vUser = db.getValidUser(emailid, mobileno);
-                if (emailid.isEmpty() || mobileno.isEmpty()) {
+                emailId = String.valueOf(inputEnterEmail.getText());
+                mobileNo = String.valueOf(inputEnterMobileNo.getText());
+                String vUser = db.getValidUser(emailId, mobileNo);
+                if (emailId.isEmpty() || mobileNo.isEmpty()) {
                     Snackbar.make(view, "Please Enter Valid Email/MobileNo", Snackbar.LENGTH_LONG).setAction("Action", null).show();
-                } else if (!(emailid.matches(EmailPattern))) {
+                } else if (!(emailId.matches(EmailPattern))) {
                     Snackbar.make(view, "Please Enter Valid Email", Snackbar.LENGTH_LONG).setAction("Action", null).show();
-                } else if (vUser.equals(emailid) || vUser.equals(mobileno)) {
+                } else if (vUser.equals(emailId) || vUser.equals(mobileNo)) {
                     Snackbar.make(view, "User already exists", Snackbar.LENGTH_LONG).setAction("Action", null).show();
                 } else {
-                    new SendEmailTask(this, mActivity, emailid).execute();
+                    new SendEmailTask(this, mActivity, emailId).execute();
 //                    new sendmailgmail().execute();
                 }
                 break;
@@ -134,14 +122,14 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
                 } else {
                     String sOtp = String.valueOf(inputEnterOtp.getText());
                     if (!sOtp.isEmpty() && sOtp != null) {
-                        String sentOTP = db.getMyOTP(emailid, mobileno);
+                        String sentOTP = db.getMyOTP(emailId, mobileNo);
                         if (sentOTP != null && !sentOTP.equals(sOtp)) {
                             Snackbar.make(view, "Please Enter Received OTP", Snackbar.LENGTH_LONG).setAction("Action", null).show();
                         } else {
                             finish();
                             Intent i3 = new Intent(RegisterActivity.this, ProfileActivity.class);
-                            i3.putExtra("email", emailid);
-                            i3.putExtra("mobile", mobileno);
+                            i3.putExtra("email", emailId);
+                            i3.putExtra("mobile", mobileNo);
                             startActivity(i3);
                         }
                     } else {
@@ -171,10 +159,9 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
         otp.setVisibility(View.GONE);
         Log.e(">>>>>>>>>> mOtp", mOtp + "coming here");
         OTPMaster master1 = new OTPMaster();
-        master1.setUserID(userid);
         master1.setOtp(mOtp);
-        master1.setEmail(emailid);
-        master1.setMobile(mobileno);
+        master1.setEmail(emailId);
+        master1.setMobile(mobileNo);
         master1.setCreatedAt(new Date());
         master1.setUpdatedAt(new Date());
         Log.e("values", master1 + "");
@@ -200,72 +187,4 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
         AlertDialog alert = builder.create();
         alert.show();
     }
-
-//    public class sendmailgmail extends AsyncTask<Void, String, Void> implements DialogInterface.OnCancelListener {
-//
-//        @Override
-//        public void onCancel(DialogInterface dialog) {
-//
-//        }
-//
-//        @Override
-//        protected void onPreExecute() {
-//            super.onPreExecute();
-//            utils.showProgress("", "Sending OTP..");
-//        }
-//
-//        @Override
-//        protected void onPostExecute(Void result) {
-//            super.onPostExecute(result);
-//            utils.hideProgress();
-//            register.setVisibility(View.VISIBLE);
-//            checkTermsConditions.setVisibility(View.VISIBLE);
-//            inputLayoutEnterOtp.setVisibility(View.VISIBLE);
-//            resend.setVisibility(View.VISIBLE);
-//            otp.setVisibility(View.GONE);
-//        }
-//
-//        @Override
-//        protected Void doInBackground(Void... params) {
-//            mailsender = new GMailSender("gate4ru@gmail.com", "gate123$");
-//            String[] toArr = {emailid};
-//            String tempOtp = OTP_Generation.generateOTP(6);
-//            mailsender.set_to(toArr);
-//            mailsender.set_from("gate4ru@gmail.com");
-//            mailsender.set_subject("OTP Validation");
-//            mailsender.setBody("Hello," + "\n"
-//                    + "\nThe Account has been sent with the OTP." + "\n"
-//                    + "\n" + "Please check below." + "\n" + "\n"
-//                    + "The OTP is: " + tempOtp + "\n" + "\n"
-//                    + "Thank You For Using Gate Service");
-//            try {
-//                if (mailsender.send()) {
-//                    Log.e("after execute method ", "Coming here");
-//                    Log.e(">>>>>>>>>> tempOtp", tempOtp + "coming here");
-//                    OTPMaster master1 = new OTPMaster();
-//                    master1.setUserID(userid);
-//                    master1.setOtp(tempOtp);
-//                    master1.setEmail(emailid);
-//                    master1.setMobile(mobileno);
-//                    master1.setCreatedAt(new Date());
-//                    master1.setUpdatedAt(new Date());
-//                    Log.e("values", master1 + "");
-//                    db.createOTPUser(master1);
-////            db.updateOtpUser(master1);
-////            finish();
-//                    Log.e("OTPMaster object", master1.toString());
-//                    Log.d("EmailSent successfully.",
-//                            "Email was sent successfully.");
-//                } else {
-//                    utils.hideProgress();
-//                    UtilsProvider.alertBox(mActivity, "Error");
-//                    Log.d("Email was not sent.", "Email was not sent.");
-//                }
-//            } catch ( Exception e) {
-//                Log.e("MailApp", "Could not send email", e);
-//            }
-//            return null;
-//        }
-//
-//    }
 }

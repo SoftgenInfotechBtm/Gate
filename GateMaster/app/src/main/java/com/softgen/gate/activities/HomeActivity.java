@@ -1,161 +1,280 @@
 package com.softgen.gate.activities;
 
+import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.pm.ApplicationInfo;
-import android.content.pm.PackageManager;
-import android.net.Uri;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.NavigationView;
-import android.support.design.widget.Snackbar;
-import android.support.v4.view.GravityCompat;
-import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBarDrawerToggle;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.FrameLayout;
+import android.widget.ImageButton;
+import android.widget.ImageView;
+import android.widget.ScrollView;
+import android.widget.Toast;
 
+import com.freshdesk.hotline.Hotline;
+import com.freshdesk.hotline.HotlineConfig;
+import com.freshdesk.hotline.HotlineUser;
+import com.freshdesk.hotline.exception.HotlineInvalidUserPropertyException;
+import com.luseen.spacenavigation.SpaceItem;
+import com.luseen.spacenavigation.SpaceNavigationView;
+import com.luseen.spacenavigation.SpaceOnClickListener;
+import com.luseen.spacenavigation.SpaceOnLongClickListener;
+import com.softgen.gate.fragments.EditProfileFragment;
+import com.softgen.gate.fragments.SettingsFragment;
 import com.softgen.gate.gatedb.R;
+import com.softgen.gate.model.Service_offered;
 import com.softgen.gate.provider.SharedUtils;
+import com.squareup.picasso.MemoryPolicy;
+import com.squareup.picasso.Picasso;
+import com.synnapps.carouselview.CarouselView;
+import com.synnapps.carouselview.ImageListener;
 
-import java.io.File;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created by 9Jeevan on 19-08-2016.
  */
-public class HomeActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
+public class HomeActivity extends AppCompatActivity {
+    ImageButton share;
+    CarouselView carouselView;
+    FrameLayout container;
+    ScrollView tabs;
+    ImageListener imageListener = new ImageListener() {
+
+        @Override
+        public void setImageForPosition(final int position, ImageView imageView) {
+            int[] sampleImages = {R.drawable.img8, R.drawable.img10, R.drawable.img11, R.drawable.img12, R.drawable.img13, R.drawable.img15, R.drawable.img9};
+            //imageView.setImageResource(sampleImages[position]);
+            Picasso.with(HomeActivity.this).load(sampleImages[position])
+                    .memoryPolicy(MemoryPolicy.NO_CACHE, MemoryPolicy.NO_STORE)
+                    .resize(260, 150)
+                    .centerInside()
+                    .error(R.drawable.gate)
+                    .into(imageView);
+        }
+    };
     private Context mActivity;
+    private FragmentManager manager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
+        manager = getFragmentManager();
+        share = (ImageButton) findViewById(R.id.Share);
+        carouselView = (CarouselView) findViewById(R.id.carouselView);
+        container = (FrameLayout) findViewById(R.id.container);
+        tabs = (ScrollView) findViewById(R.id.service_tabs);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         mActivity = HomeActivity.this;
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
+        initCaroselSlider(7);
+        share.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Welcome to Home Screen", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+            public void onClick(View v) {
+                Intent sendIntent = new Intent();
+                sendIntent.setAction(Intent.ACTION_SEND);
+                sendIntent.putExtra(Intent.EXTRA_TEXT,
+                        "Gate for u: https://play.google.com/store/apps/details?id=com.softgen.gatedb");
+                sendIntent.setType("text/plain");
+                startActivity(Intent.createChooser(sendIntent, "Share Via"));
             }
         });
+//        addSettings();
+        SpaceNavigationView spaceNavigationView = (SpaceNavigationView) findViewById(R.id.spacenav);
+        spaceNavigationView.initWithSaveInstanceState(savedInstanceState);
+        spaceNavigationView.addSpaceItem(new SpaceItem("Profile", R.drawable.prof));
+        spaceNavigationView.addSpaceItem(new SpaceItem("Settings", R.drawable.ic_menu_manage));
+        spaceNavigationView.addSpaceItem(new SpaceItem("Profile1", R.drawable.ic_nav));
+        spaceNavigationView.addSpaceItem(new SpaceItem("Settings2", R.drawable.service2));
+        spaceNavigationView.showIconOnly();
+        spaceNavigationView.setSpaceOnClickListener(new SpaceOnClickListener() {
+            @Override
+            public void onCentreButtonClick() {
+                container.setVisibility(View.VISIBLE);
+                tabs.setVisibility(View.GONE);
+                addSettings();
+//                replaceSettings();
+            }
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        drawer.setDrawerListener(toggle);
-        toggle.syncState();
+            @Override
+            public void onItemClick(int itemIndex, String itemName) {
+                switch (itemName) {
+                    case "Profile":
+                        container.setVisibility(View.VISIBLE);
+                        tabs.setVisibility(View.GONE);
+                        replaceEditProfile();
+//                        startActivity(new Intent(HomeActivity.this, EditProfileActivity.class));
+                        break;
 
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-        navigationView.setNavigationItemSelectedListener(this);
+                    case "Settings":
+                        startActivity(new Intent(HomeActivity.this, HelpActivity.class));
+                        break;
+                    case "Profile1":
+                        startActivity(new Intent(HomeActivity.this, Service_offered.class));
+                        break;
+
+                    case "Settings2":
+                        startActivity(new Intent(HomeActivity.this, EditProfileActivity.class));
+                        break;
+                }
+            }
+
+            @Override
+            public void onItemReselected(int itemIndex, String itemName) {
+                switch (itemName) {
+                    case "Profile":
+                        container.setVisibility(View.VISIBLE);
+                        tabs.setVisibility(View.GONE);
+                        replaceEditProfile();
+//                        startActivity(new Intent(HomeActivity.this, EditProfileActivity.class));
+                        break;
+
+                    case "Settings":
+                        startActivity(new Intent(HomeActivity.this, HelpActivity.class));
+                        break;
+                    case "Profile1":
+                        startActivity(new Intent(HomeActivity.this, Service_offered.class));
+                        break;
+
+                    case "Settings2":
+                        startActivity(new Intent(HomeActivity.this, EditProfileActivity.class));
+                        break;
+                }
+            }
+        });
+        spaceNavigationView.setSpaceOnLongClickListener(new SpaceOnLongClickListener() {
+            @Override
+            public void onCentreButtonLongClick() {
+                Toast.makeText(HomeActivity.this, "onCentreButtonLongClick", Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onItemLongClick(int itemIndex, String itemName) {
+                Toast.makeText(HomeActivity.this, itemIndex + " " + itemName, Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
-    @Override
-    public void onBackPressed() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(HomeActivity.this);
-        builder.setCancelable(false);
-        builder.setMessage(" Do u want to Exit ?");
-        builder.setPositiveButton("yes", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                finish();
-                SharedUtils.saveLoginDisabled(mActivity, true);
-            }
-        });
-        builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.cancel();
+    void addSettings() {
+        SettingsFragment fragmentA = new SettingsFragment();
+        FragmentTransaction transaction = manager.beginTransaction();
+        EditProfileFragment setFrag1 = (EditProfileFragment) manager.findFragmentByTag("editProfile");
+        SettingsFragment setFrag = (SettingsFragment) manager.findFragmentByTag("services");
+        if (setFrag != null || setFrag1 != null)
+            transaction.replace(R.id.container, fragmentA, "services");
+        else
+            transaction.add(R.id.container, fragmentA, "services");
+        transaction.commit();
+    }
 
-            }
-        });
-        AlertDialog alert = builder.create();
-        alert.show();
+
+    public void replaceSettings() {
+        SettingsFragment fragmentA = new SettingsFragment();
+        FragmentTransaction transaction = manager.beginTransaction();
+        transaction.replace(R.id.container, fragmentA, "services");
+        transaction.commit();
+    }
+//    @Override
+//    public void onBackPressed() {
+//        AlertDialog.Builder builder = new AlertDialog.Builder(HomeActivity.this);
+//        builder.setCancelable(false);
+//        builder.setMessage(" Do u want to Exit ?");
+//        builder.setPositiveButton("yes", new DialogInterface.OnClickListener() {
+//            @Override
+//            public void onClick(DialogInterface dialog, int which) {
+//                finish();
+//                SharedUtils.saveLoginDisabled(mActivity, true);
+//            }
+//        });
+//        builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
+//            @Override
+//            public void onClick(DialogInterface dialog, int which) {
+//                dialog.cancel();
+//
+//            }
+//        });
+//        AlertDialog alert = builder.create();
+//        alert.show();
+//    }
+
+    public void replaceEditProfile() {
+        EditProfileFragment fragmentA = new EditProfileFragment();
+        FragmentTransaction transaction = manager.beginTransaction();
+        EditProfileFragment setFrag = (EditProfileFragment) manager.findFragmentByTag("editProfile");
+        SettingsFragment setFrag1 = (SettingsFragment) manager.findFragmentByTag("services");
+        if (setFrag != null || setFrag1 != null)
+            transaction.replace(R.id.container, fragmentA, "editProfile");
+        else
+            transaction.add(R.id.container, fragmentA, "editProfile");
+        transaction.commit();
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.main, menu);
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
+        if (id == R.id.help) {
+            initHotLineChats();
+            Hotline.showFAQs(getApplicationContext());
+            return true;
+        } else if (id == R.id.rateus) {
+            return true;
+        } else if (id == R.id.signout) {
+            Intent i4 = new Intent(this, LoginActivity.class);
+            i4.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            i4.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+            SharedUtils.saveLoginDisabled(mActivity, false);
+            finish();
+            startActivity(i4);
             return true;
         }
 
         return super.onOptionsItemSelected(item);
     }
 
-    @Override
-    public boolean onNavigationItemSelected(MenuItem item) {
-        // Handle navigation view item clicks here.
-        switch (item.getItemId()) {
-            case R.id.nav_servicesOffered:
-                Intent i = new Intent(this, OfferedActivity.class);
-                startActivity(i);
-                break;
-            case R.id.nav_servicesRequired:
-                Intent iq = new Intent(this, RequiredActivity.class);
-                startActivity(iq);
-                break;
-            case R.id.nav_placesVisited:
-                Intent i2 = new Intent(this, PlacesVisitedActivity.class);
-                startActivity(i2);
-                break;
-            case R.id.nav_tools:
-//                aClass = PlacesVisitedActivity.class;
-                break;
-            case R.id.nav_profile:
-                Intent i3 = new Intent(this, EditProfileActivity.class);
-                startActivity(i3);
-                break;
-            case R.id.nav_share:
-                try {
-                    PackageManager pm = getPackageManager();
-                    ApplicationInfo ai = pm.getApplicationInfo(getPackageName(), 0);
-                    File srcFile = new File(ai.publicSourceDir);
-                    Intent share = new Intent();
-                    share.setAction(Intent.ACTION_SEND);
-                    share.setType("application/vnd.android.package-archive");
-                    share.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(srcFile));
-                    startActivity(Intent.createChooser(share, "Share Via"));
-                } catch (Exception e) {
-                    Log.e("ShareApp", e.getMessage());
-                }
-                break;
-            case R.id.nav_signOut:
-                Intent i4 = new Intent(this, LoginActivity.class);
-                i4.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                i4.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
-                SharedUtils.saveLoginDisabled(mActivity, false);
-                finish();
-                startActivity(i4);
-                break;
-            default:
-                Intent i5 = new Intent(this, HelpActivity.class);
-                startActivity(i5);
-                break;
-
+    private void initHotLineChats() {
+        HotlineConfig hConfig = new HotlineConfig("84ab2d70-5a36-4182-8cb1-4c1bb862f735", " 677744fb-9ed3-458c-bf68-13b42642174e");
+        hConfig.setVoiceMessagingEnabled(true);
+        hConfig.setCameraCaptureEnabled(true);
+        hConfig.setPictureMessagingEnabled(true);
+        Hotline.getInstance(getApplicationContext()).init(hConfig);
+        HotlineUser hlUser = Hotline.getInstance(getApplicationContext()).getUser();
+//        hlUser.setName(db.user_name);
+//        hlUser.setEmail(SQLiteHandler.user_email);
+//        hlUser.setExternalId(SQLiteHandler.user_id);
+        // hlUser.setPhone(SQLiteHandler.user_phone);
+//Call updateUser so that the user information is synced with Hotline's servers
+        Hotline.getInstance(getApplicationContext()).updateUser(hlUser);
+        /* Set any custom metadata to give agents more context, and for segmentation for marketing or pro-active messaging */
+        Map<String, String> userMeta = new HashMap<String, String>();
+//Call updateUserProperties to sync the user properties with Hotline's servers
+        try {
+            Hotline.getInstance(getApplicationContext()).updateUserProperties(userMeta);
+        } catch (HotlineInvalidUserPropertyException e) {
+            e.printStackTrace();
         }
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        drawer.closeDrawer(GravityCompat.START);
-        return true;
+    }
+
+    void initCaroselSlider(int no_of_images) {
+        // set ViewListener for custom view
+        //no_of_ads = no_of_images;
+        if (no_of_images > 0)
+            carouselView.setPageCount(no_of_images);
+        else
+            carouselView.setPageCount(7);
+
+        carouselView.setImageListener(imageListener);
     }
 }

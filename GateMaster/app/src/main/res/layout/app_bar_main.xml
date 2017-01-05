@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -10,13 +11,253 @@
         android:id="@+id/head"
         layout="@layout/header" />
 
-    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/fab"
+    <ImageButton
+        android:id="@+id/Share"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="bottom|end"
-        android:layout_margin="@dimen/fab_margin"
-        android:src="@drawable/profile"
-        android:visibility="gone" />
+        android:layout_marginLeft="280dp"
+        android:layout_marginTop="15dp"
+        android:background="@color/colorPrimary"
+        android:src="@drawable/ic_share" />
+    <ScrollView
+        android:id="@+id/service_tabs"
+        android:layout_below="@+id/head"
+        android:layout_above="@+id/spacenav"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
-</android.support.design.widget.CoordinatorLayout>
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/white"
+                android:orientation="vertical">
+
+                <com.synnapps.carouselview.CarouselView
+                    android:id="@+id/carouselView"
+                    android:layout_width="match_parent"
+                    android:layout_height="250dp"
+                    app:fillColor="#FFFFFFFF"
+                    app:pageColor="#00000000"
+                    app:radius="3dp"
+                    app:slideInterval="2000"
+                    app:strokeColor="#FF777777"
+                    app:strokeWidth="0.5dp" />
+
+            </LinearLayout>
+            <LinearLayout
+                android:id="@+id/linear1"
+                android:layout_marginTop="10dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:weightSum="1">
+                <android.support.v7.widget.CardView
+                    android:layout_margin="5dp"
+                    app:cardCornerRadius="10dp"
+                    android:layout_width="250dp"
+                    android:layout_height="150dp"
+                    android:layout_weight="0.5">
+                    <ImageView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_margin="5dp"
+                        android:src="@drawable/img6" />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="CONSTRUCTION"
+                        android:textColor="@color/colorPrimaryDark"
+                        android:layout_gravity="center_horizontal"/>
+
+                </android.support.v7.widget.CardView>
+                <android.support.v7.widget.CardView
+                    android:layout_width="250dp"
+                    android:layout_margin="5dp"
+                    app:cardCornerRadius="10dp"
+                    android:layout_height="150dp"
+                    android:layout_weight="0.5">
+                    <ImageView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_margin="5dp"
+                        android:src="@drawable/img1"/>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="SOFTWARE"
+                        android:textColor="@color/colorPrimaryDark"
+                        android:layout_gravity="center_horizontal"/>
+
+                </android.support.v7.widget.CardView>
+            </LinearLayout>
+            <LinearLayout
+                android:id="@+id/linear2"
+                android:layout_marginTop="10dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+
+                android:orientation="horizontal"
+                android:weightSum="1">
+                <android.support.v7.widget.CardView
+                    android:layout_margin="5dp"
+                    app:cardCornerRadius="10dp"
+                    android:layout_width="250dp"
+                    android:layout_height="150dp"
+                    android:layout_weight="0.5">
+                    <ImageView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_margin="5dp"
+                        android:src="@drawable/img3" />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="MECHANICAL"
+                        android:textColor="@color/colorPrimaryDark"
+                        android:layout_gravity="center_horizontal"/>
+
+                </android.support.v7.widget.CardView>
+                <android.support.v7.widget.CardView
+                    android:layout_width="250dp"
+                    android:layout_margin="5dp"
+                    app:cardCornerRadius="10dp"
+                    android:layout_height="150dp"
+                    android:layout_weight="0.5">
+                    <ImageView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_margin="5dp"
+                        android:src="@drawable/img4"/>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="ELECTRICAL"
+                        android:textColor="@color/colorPrimaryDark"
+                        android:layout_gravity="center_horizontal"/>
+
+                </android.support.v7.widget.CardView>
+            </LinearLayout>
+            <LinearLayout
+                android:id="@+id/linear3"
+                android:layout_marginTop="10dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:weightSum="1">
+                <android.support.v7.widget.CardView
+                    android:layout_margin="5dp"
+                    app:cardCornerRadius="10dp"
+                    android:layout_width="250dp"
+                    android:layout_height="150dp"
+                    android:layout_weight="0.5">
+                    <ImageView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_margin="5dp"
+                        android:src="@drawable/img5" />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="HOME SERVICES"
+                        android:textColor="@color/colorPrimaryDark"
+                        android:layout_gravity="center_horizontal"/>
+
+                </android.support.v7.widget.CardView>
+                <android.support.v7.widget.CardView
+                    android:layout_width="250dp"
+                    android:layout_margin="5dp"
+                    app:cardCornerRadius="10dp"
+                    android:layout_height="150dp"
+                    android:layout_weight="0.5">
+                    <ImageView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_margin="5dp"
+                        android:src="@drawable/img7"/>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="EVENTS"
+                        android:textColor="@color/colorPrimaryDark"
+                        android:layout_gravity="center_horizontal"/>
+
+                </android.support.v7.widget.CardView>
+            </LinearLayout>
+            <LinearLayout
+                android:id="@+id/linear4"
+                android:layout_marginTop="10dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:weightSum="1">
+                <android.support.v7.widget.CardView
+                    android:layout_margin="5dp"
+                    app:cardCornerRadius="10dp"
+                    android:layout_width="250dp"
+                    android:layout_height="150dp"
+                    android:layout_weight="0.5">
+                    <ImageView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_margin="5dp"
+                        android:src="@drawable/img16" />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="RAILWAYS"
+                        android:textColor="@color/colorPrimaryDark"
+                        android:layout_gravity="center_horizontal"/>
+
+                </android.support.v7.widget.CardView>
+                <android.support.v7.widget.CardView
+                    android:layout_width="250dp"
+                    android:layout_margin="5dp"
+                    app:cardCornerRadius="10dp"
+                    android:layout_height="150dp"
+                    android:layout_weight="0.5">
+                    <ImageView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_margin="5dp"
+                        android:src="@drawable/img14"/>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="AIRWAYS"
+                        android:textColor="@color/colorPrimaryDark"
+                        android:layout_gravity="center_horizontal"/>
+
+                </android.support.v7.widget.CardView>
+            </LinearLayout>
+
+
+        </LinearLayout>
+    </ScrollView>
+
+    <FrameLayout
+        android:id="@+id/container"
+        android:layout_below="@+id/head"
+        android:layout_width="match_parent"
+        android:visibility="gone"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/spacenav"/>
+
+    <com.luseen.spacenavigation.SpaceNavigationView
+        android:id="@+id/spacenav"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        app:centre_button_color="@color/colorPrimary"
+        app:centre_button_icon="@drawable/nearme"
+        app:inactive_item_color="@color/white"
+        app:layout_behavior="com.luseen.spacenavigation.SpaceNavigationViewBehavior"
+        app:space_background_color="@color/colorPrimary" />
+
+</RelativeLayout>

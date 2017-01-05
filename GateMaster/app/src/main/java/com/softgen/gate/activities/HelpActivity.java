@@ -6,6 +6,7 @@ import android.graphics.Paint;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -23,8 +24,9 @@ public class HelpActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_help);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbar.setTitle("Help");
         setSupportActionBar(toolbar);
-
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         profile = (ImageView) findViewById(R.id.prfl);
         name = (TextView) findViewById(R.id.name);
         email = (TextView) findViewById(R.id.email);
@@ -49,6 +51,19 @@ public class HelpActivity extends AppCompatActivity {
         });
 
     }
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                finish();
+                return false;
+            default:
+                break;
+
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
 }
 
 
