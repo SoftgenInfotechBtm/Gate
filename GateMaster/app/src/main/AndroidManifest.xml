@@ -91,7 +91,20 @@
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/google_maps_key" />
+        <service
+            android:name="com.softgen.gate.services.FirebaseMessagingService">
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT"/>
+            </intent-filter>
+        </service>
 
+
+        <service
+            android:name="com.softgen.gate.services.FirebaseInstanceIDService">
+            <intent-filter>
+                <action android:name="com.google.firebase.INSTANCE_ID_EVENT"/>
+            </intent-filter>
+        </service>
         <activity
             android:name="com.softgen.gate.activities.FaceBookActivity"
             android:configChanges="keyboard|keyboardHidden|screenLayout|screenSize|orientation"

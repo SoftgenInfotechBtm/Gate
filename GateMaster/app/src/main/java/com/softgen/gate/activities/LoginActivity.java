@@ -19,6 +19,8 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.crashlytics.android.Crashlytics;
+import com.google.firebase.iid.FirebaseInstanceId;
+import com.google.firebase.messaging.FirebaseMessaging;
 import com.softgen.gate.database.DBHelper;
 import com.softgen.gate.databaseHandler.DaoMaster;
 import com.softgen.gate.gatedb.R;
@@ -46,6 +48,8 @@ public class LoginActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Fabric.with(this, new Crashlytics());
+        FirebaseMessaging.getInstance().subscribeToTopic("test");
+        FirebaseInstanceId.getInstance().getToken();
         mActivity = LoginActivity.this;
         if (SharedUtils.isLoginDisabled(mActivity)) {
             finish();
@@ -90,7 +94,7 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 finish();
-                Intent i = new Intent(mActivity, ProfileActivity.class);
+                Intent i = new Intent(mActivity, RegisterActivity.class);
                 startActivity(i);
             }
         });

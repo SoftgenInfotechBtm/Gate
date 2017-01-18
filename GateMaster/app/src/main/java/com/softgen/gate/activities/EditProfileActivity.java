@@ -3,18 +3,26 @@ package com.softgen.gate.activities;
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.TimePickerDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.TimePicker;
 
 import com.satsuware.usefulviews.LabelledSpinner;
@@ -22,15 +30,23 @@ import com.softgen.gate.database.DBHelper;
 import com.softgen.gate.gatedb.R;
 import com.softgen.gate.model.ProfileMaster;
 import com.softgen.gate.provider.SharedUtils;
+import com.softgen.gate.utility.InstantAutoCompleteTextView;
 import com.softgen.gate.utility.Utils;
 import com.wdullaer.materialdatetimepicker.date.DatePickerDialog;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+
+import static com.softgen.gate.utility.Utils.loadJSONFromAsset;
 
 public class EditProfileActivity extends AppCompatActivity implements LabelledSpinner.OnItemChosenListener, DatePickerDialog.OnDateSetListener, View.OnClickListener {
     @BindView(R.id.btn_sign_up)
@@ -58,17 +74,23 @@ public class EditProfileActivity extends AppCompatActivity implements LabelledSp
     @BindView(R.id.cost)
     EditText etCost;
     private DBHelper db;
+    private InstantAutoCompleteTextView atvServicesOffered, atvServicesRequired;
     private String TAG = "", MODULE = "Edit Profile";
     private LabelledSpinner spinDuartion;
-    private String mServicesOffered;
-    private String mServicesReceived;
     private Utils utils;
     private String mServicesCharges;
     private Activity mActivity;
     private String jsonDate;
     private String validFrom;
     private String selectedDay;
-
+    private ArrayList<String> lServicesOffered;
+    private ArrayList<String> lServicesReceived;
+    private LinearLayout llServicesOffered;
+    private LinearLayout llServicesRequired;
+    private ArrayList<String> serviceList;
+    private CoordinatorLayout profileAct;
+    List<String> getOffered;
+    List<String> getReceived;
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
@@ -82,10 +104,113 @@ public class EditProfileActivity extends AppCompatActivity implements LabelledSp
         return super.onOptionsItemSelected(item);
     }
 
+    private void initListeners() {
+        atvServicesOffered.setThreshold(0);
+        atvServicesRequired.setThreshold(0);
+        serviceList = new ArrayList<String>();
+        try {
+            JSONObject obj = new JSONObject(loadJSONFromAsset(getApplicationContext()));
+            JSONArray jsonArray = obj.getJSONArray("services");
+            if (jsonArray != null) {
+                int len = jsonArray.length();
+                for (int i = 0; i < len; i++) {
+                    serviceList.add(jsonArray.get(i).toString());
+                }
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        ArrayAdapter<String> adapterDoctor = new ArrayAdapter<>(this, android.R.layout.simple_dropdown_item_1line, serviceList);
+        atvServicesOffered.setAdapter(adapterDoctor);
+        atvServicesRequired.setAdapter(adapterDoctor);
+        atvServicesOffered.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, final int position, long id) {
+                LayoutInflater inflater = (LayoutInflater) getBaseContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                View to_add = inflater.inflate(R.layout.item_services, llServicesOffered, false);
+                final TextView serviceList = (TextView) to_add.findViewById(R.id.tv_service);
+                final ImageView cancel = (ImageView) to_add.findViewById(R.id.iv_close);
+                serviceList.setText(parent.getItemAtPosition(position).toString());
+                cancel.setId(position);
+                if (checkAlreadyExist(llServicesOffered, parent.getItemAtPosition(position).toString())) {
+                    to_add.setId(position);
+                    lServicesOffered.add(serviceList.getText().toString());
+                    llServicesOffered.addView(to_add);
+                    atvServicesOffered.setText("");
+                } else {
+                    Snackbar.make(profileAct, "Already Added", Snackbar.LENGTH_SHORT).show();
+                    atvServicesOffered.setText("");
+                }
+                cancel.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        int childCount = llServicesOffered.getChildCount();
+                        for (int i = 0; i < childCount; i++) {
+                            if (llServicesOffered.getChildAt(i).getId() == cancel.getId()) {
+                                String serviceName = serviceList.getText().toString();
+                                lServicesOffered.remove(serviceName);
+                                llServicesOffered.removeViewAt(i);
+                                break;
+                            }
+                        }
+                    }
+                });
+            }
+        });
+        atvServicesRequired.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, final int position, long id) {
+                final int pos = position;
+                LayoutInflater inflater = (LayoutInflater) getBaseContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                View to_add = inflater.inflate(R.layout.item_services, llServicesRequired, false);
+                final TextView serviceList = (TextView) to_add.findViewById(R.id.tv_service);
+                final ImageView cancel = (ImageView) to_add.findViewById(R.id.iv_close);
+                cancel.setId(position);
+                serviceList.setText(parent.getItemAtPosition(position).toString());
+                if (checkAlreadyExist(llServicesRequired, parent.getItemAtPosition(position).toString())) {
+                    to_add.setId(position);
+                    lServicesReceived.add(serviceList.getText().toString());
+                    llServicesRequired.addView(to_add);
+                    atvServicesRequired.setText("");
+                } else {
+                    Snackbar.make(profileAct, "Already Added", Snackbar.LENGTH_SHORT).show();
+                    atvServicesRequired.setText("");
+                }
+                cancel.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        int childCount = llServicesRequired.getChildCount();
+                        for (int i = 0; i < childCount; i++) {
+                            if (llServicesRequired.getChildAt(i).getId() == cancel.getId()) {
+                                String serviceName = serviceList.getText().toString();
+                                lServicesReceived.remove(serviceName);
+                                llServicesRequired.removeViewAt(i);
+                                break;
+                            }
+                        }
+                    }
+                });
+            }
+        });
+    }
+
+    private boolean checkAlreadyExist(LinearLayout llServicesOffered, String name) {
+        int childCount = llServicesOffered.getChildCount();
+        for (int i = 0; i < childCount; i++) {
+            RelativeLayout childView = (RelativeLayout) llServicesOffered.getChildAt(i);
+            TextView serviceData = (TextView) childView.findViewById(R.id.tv_service);
+            if (serviceData.getText().toString().equals(name)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
+        profileAct = (CoordinatorLayout) findViewById(R.id.profile_co);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         toolbar.setTitle("Edit Profile");
         setSupportActionBar(toolbar);
@@ -95,6 +220,13 @@ public class EditProfileActivity extends AppCompatActivity implements LabelledSp
         ButterKnife.bind(this);
         spinDuartion = (LabelledSpinner) findViewById(R.id.services_charges);
         spinDuartion.setItemsArray(R.array.cost_details);
+        btSignUp.setText("Update");
+        llServicesOffered = (LinearLayout) findViewById(R.id.ll_services_off);
+        llServicesRequired = (LinearLayout) findViewById(R.id.ll_services_req);
+        atvServicesOffered = (InstantAutoCompleteTextView) findViewById(R.id.services_offered);
+        atvServicesRequired = (InstantAutoCompleteTextView) findViewById(R.id.services_required);
+        lServicesOffered = new ArrayList<String>();
+        lServicesReceived = new ArrayList<String>();
         spinDuartion.setOnItemChosenListener(this);
         db = new DBHelper(EditProfileActivity.this);
         //ids for edit texts
@@ -102,6 +234,8 @@ public class EditProfileActivity extends AppCompatActivity implements LabelledSp
         etEmail.setEnabled(false);
         etStartTime.setOnClickListener(this);
         etEndTime.setOnClickListener(this);
+        etPassword.setVisibility(View.GONE);
+        etConfirmPassword.setVisibility(View.GONE);
         setValues();
         etStartTime.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
@@ -120,43 +254,36 @@ public class EditProfileActivity extends AppCompatActivity implements LabelledSp
                 }
             }
         });
+        initListeners();
         btSignUp.setOnClickListener(new View.OnClickListener() {
             @TargetApi(Build.VERSION_CODES.GINGERBREAD)
             @Override
             public void onClick(View view) {
                 if (etName.getText().toString().isEmpty() && etEmail.getText().toString().isEmpty()
                         && etMobNo.getText().toString().isEmpty() && etCity.getText().toString().isEmpty()
-                        && etState.getText().toString().isEmpty() && etArea.getText().toString().isEmpty()
-                        && etPassword.getText().toString().isEmpty() && etConfirmPassword.getText().toString().isEmpty()) {
+                        && etState.getText().toString().isEmpty() && etArea.getText().toString().isEmpty()) {
                     Snackbar.make(view, "Fields Cannot be empty", Snackbar.LENGTH_LONG).setAction("Action", null).show();
-                } else if (etPassword.getText().toString().length() < 8
-                        || (etConfirmPassword.getText().toString().length() < 8)) {
-                    Snackbar.make(view, "Password must be at-least 8 characters", Snackbar.LENGTH_LONG).setAction("Action", null).show();
                 } else {
-                    if (!etPassword.getText().toString().equals(etConfirmPassword.getText().toString())) {
-                        Snackbar.make(view, "Passwords Doesn't Match", Snackbar.LENGTH_LONG).setAction("Action", null).show();
-                    } else {
-                        ProfileMaster master = new ProfileMaster();
-                        master.setUserID(String.valueOf(SharedUtils.getUserID(mActivity)));
-                        master.setUsername(etName.getText().toString());
-                        master.setEmail(etEmail.getText().toString());
-                        master.setMobile(etMobNo.getText().toString());
-                        master.setCity(etCity.getText().toString());
-                        master.setState(etState.getText().toString());
-                        master.setArea(etArea.getText().toString());
-                        master.setOffered(mServicesOffered);
-                        master.setRequired(mServicesReceived);
-                        master.setCost(etCost.getText().toString());
-                        master.setDuration(mServicesCharges);
-                        master.setStartTime(etStartTime.getText().toString());
-                        master.setEndTime(etEndTime.getText().toString());
-                        master.setPassword(etConfirmPassword.getText().toString());
-                        master.setUpdatedAt(new Date());
-                        db.updateLoginUser(master);
-                        Intent intent = new Intent(EditProfileActivity.this, HomeActivity.class);
-                        startActivity(intent);
-                        finish();
-                    }
+                    ProfileMaster master = new ProfileMaster();
+                    master.setUserID(String.valueOf(SharedUtils.getUserID(mActivity)));
+                    master.setUsername(etName.getText().toString());
+                    master.setEmail(etEmail.getText().toString());
+                    master.setMobile(etMobNo.getText().toString());
+                    master.setCity(etCity.getText().toString());
+                    master.setState(etState.getText().toString());
+                    master.setArea(etArea.getText().toString());
+                    master.setCost(etCost.getText().toString());
+                    master.setDuration(mServicesCharges);
+                    master.setStartTime(etStartTime.getText().toString());
+                    master.setEndTime(etEndTime.getText().toString());
+                    master.setCreatedAt(new Date());
+                    master.setUpdatedAt(new Date());
+                    db.updateLoginUser(master);
+                    db.createOfferedList(master, lServicesOffered);
+                    db.createRequiredList(master, lServicesReceived);
+                    Intent intent = new Intent(EditProfileActivity.this, HomeActivity.class);
+                    startActivity(intent);
+                    finish();
                 }
             }
         });
@@ -176,8 +303,77 @@ public class EditProfileActivity extends AppCompatActivity implements LabelledSp
             etStartTime.setText(getdetails.get(0).getStartTime());
             etEndTime.setText(getdetails.get(0).getEndTime());
         }
+        getOffered = db.getServiceOffered(SharedUtils.getUserID(this));
+        getReceived = db.getServiceReceived(SharedUtils.getUserID(this));
+        addReceivedViews(getReceived);
+        addOfferedViews(getOffered);
     }
 
+    private void addOfferedViews(List<String> offeredList){
+        for (int i = 0; i < offeredList.size(); i++) {
+        LayoutInflater inflater = (LayoutInflater) getBaseContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        View to_add = inflater.inflate(R.layout.item_services, llServicesOffered, false);
+        final TextView serviceList = (TextView) to_add.findViewById(R.id.tv_service);
+        final ImageView cancel = (ImageView) to_add.findViewById(R.id.iv_close);
+        serviceList.setText(offeredList.get(i).toString());
+        cancel.setId(i);
+        if (checkAlreadyExist(llServicesOffered, offeredList.get(i).toString())) {
+            to_add.setId(i);
+            lServicesOffered.add(serviceList.getText().toString());
+            llServicesOffered.addView(to_add);
+            atvServicesOffered.setText("");
+        } else {
+            Snackbar.make(profileAct, "Already Added", Snackbar.LENGTH_SHORT).show();
+            atvServicesOffered.setText("");
+        }
+        cancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                int childCount = llServicesOffered.getChildCount();
+                for (int i = 0; i < childCount; i++) {
+                    if (llServicesOffered.getChildAt(i).getId() == cancel.getId()) {
+                        String serviceName = serviceList.getText().toString();
+                        lServicesOffered.remove(serviceName);
+                        llServicesOffered.removeViewAt(i);
+                        break;
+                    }
+                }
+            }
+        });}
+    }
+    private void addReceivedViews(List<String> receivedList){
+        for (int i = 0; i < receivedList.size(); i++) {
+            LayoutInflater inflater = (LayoutInflater) getBaseContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            View to_add = inflater.inflate(R.layout.item_services, llServicesRequired, false);
+            final TextView serviceList = (TextView) to_add.findViewById(R.id.tv_service);
+            final ImageView cancel = (ImageView) to_add.findViewById(R.id.iv_close);
+            cancel.setId(i);
+            serviceList.setText(receivedList.get(i).toString());
+            if (checkAlreadyExist(llServicesRequired, receivedList.get(i).toString())) {
+                to_add.setId(i);
+                lServicesReceived.add(serviceList.getText().toString());
+                llServicesRequired.addView(to_add);
+                atvServicesRequired.setText("");
+            } else {
+                Snackbar.make(profileAct, "Already Added", Snackbar.LENGTH_SHORT).show();
+                atvServicesRequired.setText("");
+            }
+            cancel.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    int childCount = llServicesRequired.getChildCount();
+                    for (int i = 0; i < childCount; i++) {
+                        if (llServicesRequired.getChildAt(i).getId() == cancel.getId()) {
+                            String serviceName = serviceList.getText().toString();
+                            lServicesReceived.remove(serviceName);
+                            llServicesRequired.removeViewAt(i);
+                            break;
+                        }
+                    }
+                }
+            });
+        }
+    }
     private int getIndex(String[] spinner, String myString) {
         int index = 0;
         for (int i = 0; i < spinner.length; i++) {
@@ -192,12 +388,6 @@ public class EditProfileActivity extends AppCompatActivity implements LabelledSp
     @Override
     public void onItemChosen(View labelledSpinner, AdapterView<?> adapterView, View itemView, int position, long id) {
         switch (labelledSpinner.getId()) {
-            case R.id.services_offered:
-                mServicesOffered = adapterView.getItemAtPosition(position).toString();
-                break;
-            case R.id.services_required:
-                mServicesReceived = adapterView.getItemAtPosition(position).toString();
-                break;
             case R.id.services_charges:
                 mServicesCharges = adapterView.getItemAtPosition(position).toString();
                 break;

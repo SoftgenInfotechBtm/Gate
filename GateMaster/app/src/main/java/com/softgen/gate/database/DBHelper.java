@@ -208,7 +208,7 @@ public class DBHelper extends SQLiteOpenHelper {
         values.put(KEY_START_TIME, userList.getStartTime());
         values.put(KEY_END_TIME, userList.getEndTime());
         values.put(KEY_UPDATED_AT, userList.getUpdatedAt().toString());
-        values.put(KEY_PASSWORD, userList.getPassword());
+//        values.put(KEY_PASSWORD, userList.getPassword());
         // insert row
         long login_id = db.update(TABLE_PROFILE, values, (KEY_ID + " = '" + userList.getUserID() + "'"), null);
 
@@ -271,6 +271,56 @@ public class DBHelper extends SQLiteOpenHelper {
         return userdetail;
     }
 
+
+    public List<String> getServiceOffered(int mobileNo) {
+        List<String> userdetail = new ArrayList<String>();
+        String selectQuery = "SELECT * FROM " + TABLE_OFFERED + " WHERE "
+                + KEY_ID + " = '" + mobileNo + "'";
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor c = db.rawQuery(selectQuery, null);
+        if (c != null && c.getCount() > 0) {
+            if (c.moveToFirst()) {
+                try {
+                    String userName = c.getString(1);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                try {
+                    do {
+                        userdetail.add(c.getString(c.getColumnIndex(KEY_OFFERED)));
+                    } while (c.moveToNext());
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+        return userdetail;
+    }
+    public List<String> getServiceReceived(int mobileNo) {
+        List<String> userdetail = new ArrayList<String>();
+        String selectQuery = "SELECT * FROM " + TABLE_RECEIVED + " WHERE "
+                + KEY_ID + " = '" + mobileNo + "'";
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor c = db.rawQuery(selectQuery, null);
+        if (c != null && c.getCount() > 0) {
+            if (c.moveToFirst()) {
+                try {
+                    String userName = c.getString(1);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                try {
+                    do {
+                        userdetail.add(c.getString(c.getColumnIndex(KEY_REQUIRED)));
+                    } while (c.moveToNext());
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+        return userdetail;
+    }
+
     public long createOTPUser(OTPMaster otpList) {
         SQLiteDatabase db = this.getWritableDatabase();
         Log.e("values1 inserted", otpList + "");
@@ -318,14 +368,6 @@ public class DBHelper extends SQLiteOpenHelper {
         return 1;
     }
 
-//    public void addEntry(String id,byte[] image)throws SQLiteException {
-//        SQLiteDatabase db = this.getWritableDatabase();
-//        ContentValues values3 = new  ContentValues();
-//        values3.put(KEY_NAME, id);
-//        values3.put(KEY_IMAGE, image);
-//        db.insert(TABLE_PERSON_DETAILS , null, values3);
-//    }
-//    byte[] image = cursor.getBlob(1);
 
     public String getMyOTP(String email, String mobileno) {
         SQLiteDatabase db = this.getReadableDatabase();

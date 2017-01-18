@@ -129,11 +129,13 @@ public class NamesActivity extends AppCompatActivity implements View.OnClickList
                         /***Info: If FRIEND*/
                         relation = getResources().getString(R.string.result,
                                 getString(R.string.friend));
+                        mImageView.setImageResource(R.drawable.friendship);
                         break;
                     case 'l':
                         /***Info: If LOVE*/
                         relation = getResources().getString(R.string.result,
                                 getString(R.string.love));
+                        mImageView.setImageResource(R.drawable.love);
                         break;
                     case 'a':
                         /***Info: If ACQUAINTANCE*/

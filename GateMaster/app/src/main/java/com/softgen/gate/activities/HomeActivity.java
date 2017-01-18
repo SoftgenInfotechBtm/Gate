@@ -1,16 +1,16 @@
 package com.softgen.gate.activities;
 
 import android.app.FragmentManager;
-import android.app.FragmentTransaction;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ScrollView;
@@ -24,10 +24,7 @@ import com.luseen.spacenavigation.SpaceItem;
 import com.luseen.spacenavigation.SpaceNavigationView;
 import com.luseen.spacenavigation.SpaceOnClickListener;
 import com.luseen.spacenavigation.SpaceOnLongClickListener;
-import com.softgen.gate.fragments.EditProfileFragment;
-import com.softgen.gate.fragments.SettingsFragment;
 import com.softgen.gate.gatedb.R;
-import com.softgen.gate.model.Service_offered;
 import com.softgen.gate.provider.SharedUtils;
 import com.squareup.picasso.MemoryPolicy;
 import com.squareup.picasso.Picasso;
@@ -37,13 +34,13 @@ import com.synnapps.carouselview.ImageListener;
 import java.util.HashMap;
 import java.util.Map;
 
+
 /**
  * Created by 9Jeevan on 19-08-2016.
  */
 public class HomeActivity extends AppCompatActivity {
     ImageButton share;
     CarouselView carouselView;
-    FrameLayout container;
     ScrollView tabs;
     ImageListener imageListener = new ImageListener() {
 
@@ -69,7 +66,6 @@ public class HomeActivity extends AppCompatActivity {
         manager = getFragmentManager();
         share = (ImageButton) findViewById(R.id.Share);
         carouselView = (CarouselView) findViewById(R.id.carouselView);
-        container = (FrameLayout) findViewById(R.id.container);
         tabs = (ScrollView) findViewById(R.id.service_tabs);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -86,7 +82,6 @@ public class HomeActivity extends AppCompatActivity {
                 startActivity(Intent.createChooser(sendIntent, "Share Via"));
             }
         });
-//        addSettings();
         SpaceNavigationView spaceNavigationView = (SpaceNavigationView) findViewById(R.id.spacenav);
         spaceNavigationView.initWithSaveInstanceState(savedInstanceState);
         spaceNavigationView.addSpaceItem(new SpaceItem("Profile", R.drawable.prof));
@@ -97,27 +92,21 @@ public class HomeActivity extends AppCompatActivity {
         spaceNavigationView.setSpaceOnClickListener(new SpaceOnClickListener() {
             @Override
             public void onCentreButtonClick() {
-                container.setVisibility(View.VISIBLE);
-                tabs.setVisibility(View.GONE);
-                addSettings();
-//                replaceSettings();
+                startActivity(new Intent(HomeActivity.this, OfferedActivity.class));
             }
 
             @Override
             public void onItemClick(int itemIndex, String itemName) {
                 switch (itemName) {
                     case "Profile":
-                        container.setVisibility(View.VISIBLE);
-                        tabs.setVisibility(View.GONE);
-                        replaceEditProfile();
-//                        startActivity(new Intent(HomeActivity.this, EditProfileActivity.class));
+                        startActivity(new Intent(HomeActivity.this, EditProfileActivity.class));
                         break;
 
                     case "Settings":
                         startActivity(new Intent(HomeActivity.this, HelpActivity.class));
                         break;
                     case "Profile1":
-                        startActivity(new Intent(HomeActivity.this, Service_offered.class));
+                        startActivity(new Intent(HomeActivity.this, EditProfileActivity.class));
                         break;
 
                     case "Settings2":
@@ -130,17 +119,14 @@ public class HomeActivity extends AppCompatActivity {
             public void onItemReselected(int itemIndex, String itemName) {
                 switch (itemName) {
                     case "Profile":
-                        container.setVisibility(View.VISIBLE);
-                        tabs.setVisibility(View.GONE);
-                        replaceEditProfile();
-//                        startActivity(new Intent(HomeActivity.this, EditProfileActivity.class));
+                        startActivity(new Intent(HomeActivity.this, EditProfileActivity.class));
                         break;
 
                     case "Settings":
                         startActivity(new Intent(HomeActivity.this, HelpActivity.class));
                         break;
                     case "Profile1":
-                        startActivity(new Intent(HomeActivity.this, Service_offered.class));
+                        startActivity(new Intent(HomeActivity.this, EditProfileActivity.class));
                         break;
 
                     case "Settings2":
@@ -161,59 +147,27 @@ public class HomeActivity extends AppCompatActivity {
             }
         });
     }
+    @Override
+    public void onBackPressed() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(HomeActivity.this);
+        builder.setCancelable(false);
+        builder.setMessage(" Do u want to Exit ?");
+        builder.setPositiveButton("yes", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                finish();
+                SharedUtils.saveLoginDisabled(mActivity, true);
+            }
+        });
+        builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.cancel();
 
-    void addSettings() {
-        SettingsFragment fragmentA = new SettingsFragment();
-        FragmentTransaction transaction = manager.beginTransaction();
-        EditProfileFragment setFrag1 = (EditProfileFragment) manager.findFragmentByTag("editProfile");
-        SettingsFragment setFrag = (SettingsFragment) manager.findFragmentByTag("services");
-        if (setFrag != null || setFrag1 != null)
-            transaction.replace(R.id.container, fragmentA, "services");
-        else
-            transaction.add(R.id.container, fragmentA, "services");
-        transaction.commit();
-    }
-
-
-    public void replaceSettings() {
-        SettingsFragment fragmentA = new SettingsFragment();
-        FragmentTransaction transaction = manager.beginTransaction();
-        transaction.replace(R.id.container, fragmentA, "services");
-        transaction.commit();
-    }
-//    @Override
-//    public void onBackPressed() {
-//        AlertDialog.Builder builder = new AlertDialog.Builder(HomeActivity.this);
-//        builder.setCancelable(false);
-//        builder.setMessage(" Do u want to Exit ?");
-//        builder.setPositiveButton("yes", new DialogInterface.OnClickListener() {
-//            @Override
-//            public void onClick(DialogInterface dialog, int which) {
-//                finish();
-//                SharedUtils.saveLoginDisabled(mActivity, true);
-//            }
-//        });
-//        builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
-//            @Override
-//            public void onClick(DialogInterface dialog, int which) {
-//                dialog.cancel();
-//
-//            }
-//        });
-//        AlertDialog alert = builder.create();
-//        alert.show();
-//    }
-
-    public void replaceEditProfile() {
-        EditProfileFragment fragmentA = new EditProfileFragment();
-        FragmentTransaction transaction = manager.beginTransaction();
-        EditProfileFragment setFrag = (EditProfileFragment) manager.findFragmentByTag("editProfile");
-        SettingsFragment setFrag1 = (SettingsFragment) manager.findFragmentByTag("services");
-        if (setFrag != null || setFrag1 != null)
-            transaction.replace(R.id.container, fragmentA, "editProfile");
-        else
-            transaction.add(R.id.container, fragmentA, "editProfile");
-        transaction.commit();
+            }
+        });
+        AlertDialog alert = builder.create();
+        alert.show();
     }
 
     @Override

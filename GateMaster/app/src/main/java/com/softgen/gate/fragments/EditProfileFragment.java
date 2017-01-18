@@ -4,7 +4,6 @@ import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
-import android.app.FragmentTransaction;
 import android.app.TimePickerDialog;
 import android.content.Context;
 import android.net.Uri;
@@ -187,24 +186,11 @@ public class EditProfileFragment extends Fragment implements LabelledSpinner.OnI
                         master.setEndTime(etEndTime.getText().toString());
                         master.setUpdatedAt(new Date());
                         db.updateLoginUser(master);
-                        replaceSettings();
                     }
                 }
             }
         });
         return inflater.inflate(R.layout.fragment_edit_profile, container, false);
-    }
-    public void replaceSettings() {
-        SettingsFragment fragmentA = new SettingsFragment();
-        FragmentTransaction transaction = manager.beginTransaction();
-        transaction.replace(R.id.container, fragmentA, "fragA");
-        transaction.commit();
-    }
-    // TODO: Rename method, update argument and hook method into UI event
-    public void onButtonPressed(Uri uri) {
-        if (mListener != null) {
-            mListener.onFragmentInteraction(uri);
-        }
     }
 
     @Override

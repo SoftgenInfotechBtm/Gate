@@ -31,7 +31,6 @@
                 android:text="Services"
                 android:textAppearance="?attr/textAppearanceListItem"
                 android:textColor="@color/black"
-                android:layout_toLeftOf="@+id/iv_edit"
                 android:textSize="18sp"
                 android:textStyle="normal" />
 

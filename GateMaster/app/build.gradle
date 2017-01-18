@@ -23,7 +23,7 @@ android {
         applicationId "com.softgen.gate"
         minSdkVersion 15
         targetSdkVersion 24
-        versionCode 3
+        versionCode 5
         versionName "1.0.2"
         // Enabling multidex support.
         multiDexEnabled true
@@ -87,6 +87,8 @@ dependencies {
     compile 'com.roughike:bottom-bar:2.0.2'
     compile 'com.github.armcha:SpaceNavigationView:1.5.0'
     compile 'com.github.freshdesk:hotline-android:1.1.+'
+    compile 'com.google.firebase:firebase-messaging:10.0.1'
+    compile 'com.squareup.okhttp3:okhttp:3.2.0'
     testCompile 'junit:junit:4.12'
     annotationProcessor 'com.jakewharton:butterknife-compiler:8.4.0'
     compile 'com.synnapps:carouselview:0.0.10'
